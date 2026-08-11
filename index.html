@@ -3,746 +3,431 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>HURAIN | Imitation Jewellery & Cosmetics</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta
+    name="description"
+    content="HURAIN Imitation Jewellery & Cosmetics - Luxury Jewellery, Cosmetics, Bangles, Perfumes, Hand Bags & Accessories."
+  >
 
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:#faf8f5;
-      color:#17130f;
-    }
-    header{
-      background:#111;
-      color:#d7b46a;
-      padding:16px 5%;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      position:sticky;
-      top:0;
-      z-index:100;
-    }
-    .logo{
-      font-size:22px;
-      font-weight:800;
-      letter-spacing:2px;
-    }
-    nav a{
-      color:#fff;
-      text-decoration:none;
-      margin-left:18px;
-      font-size:14px;
-    }
-    .hero{
-      min-height:72vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:50px 20px;
-      background:
-        linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.58)),
-        linear-gradient(135deg,#24120d,#111);
-      color:#fff;
-    }
-    .hero h1{
-      font-size:48px;
-      color:#d7b46a;
-      margin-bottom:15px;
-      letter-spacing:3px;
-    }
-    .hero p{
-      max-width:650px;
-      margin:auto;
-      line-height:1.7;
-      color:#eee;
-    }
-    .btn{
-      display:inline-block;
-      margin-top:25px;
-      padding:13px 25px;
-      border-radius:30px;
-      background:#d7b46a;
-      color:#111;
-      text-decoration:none;
-      font-weight:bold;
-      border:0;
-      cursor:pointer;
-    }
-    section{
-      padding:55px 5%;
-    }
-    .title{
-      text-align:center;
-      margin-bottom:30px;
-    }
-    .title h2{
-      font-size:30px;
-      margin-bottom:8px;
-    }
-    .title p{color:#777}
-    .search{
-      max-width:600px;
-      margin:0 auto 30px;
-      display:flex;
-    }
-    .search input{
-      width:100%;
-      padding:14px;
-      border:1px solid #ddd;
-      border-radius:10px;
-      font-size:16px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:20px;
-    }
-    .card{
-      background:#fff;
-      border-radius:15px;
-      overflow:hidden;
-      box-shadow:0 5px 20px rgba(0,0,0,.08);
-    }
-    .card img{
-      width:100%;
-      height:240px;
-      object-fit:cover;
-      background:#eee;
-    }
-    .card-body{padding:16px}
-    .card h3{margin-bottom:7px}
-    .category{color:#9c7a35;font-size:13px}
-    .price{
-      font-weight:bold;
-      margin-top:10px;
-      font-size:18px;
-    }
-    .old{
-      text-decoration:line-through;
-      color:#999;
-      font-size:14px;
-      margin-left:7px;
-    }
-    .wa{
-      display:block;
-      text-align:center;
-      margin-top:12px;
-      padding:10px;
-      border-radius:8px;
-      background:#111;
-      color:#d7b46a;
-      text-decoration:none;
-      font-weight:bold;
-    }
-    footer{
-      background:#111;
-      color:#fff;
-      text-align:center;
-      padding:35px 20px;
-    }
-    footer strong{color:#d7b46a}
-
-    .admin{
-      background:#fff;
-      max-width:650px;
-      margin:auto;
-      padding:25px;
-      border-radius:15px;
-      box-shadow:0 5px 20px rgba(0,0,0,.08);
-    }
-    .admin input,.admin textarea,.admin select{
-      width:100%;
-      padding:12px;
-      margin:7px 0 12px;
-      border:1px solid #ddd;
-      border-radius:8px;
-      font-size:15px;
-    }
-    .admin label{
-      font-weight:bold;
-      font-size:14px;
-    }
-    .danger{
-      background:#b3261e;
-      color:#fff;
-    }
-    .hidden{display:none}
-    .message{
-      padding:12px;
-      border-radius:8px;
-      margin:10px 0;
-      background:#f4f0e8;
-    }
-    @media(max-width:600px){
-      .hero h1{font-size:34px}
-      nav a{margin-left:8px;font-size:12px}
-      header{padding:14px 4%}
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header>
-  <div class="logo">HURAIN</div>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#products">Products</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</header>
-
-<main>
-
-<section class="hero" id="home">
-  <div>
-    <h1>HURAIN</h1>
-    <p>
-      Imitation Jewellery & Cosmetics
-      <br>
-      Luxury Collection • Trusted Quality • Easy Ordering
-    </p>
-    <a class="btn" href="#products">Explore Collection</a>
-  </div>
-</section>
-
-<section id="products">
-  <div class="title">
-    <h2>Our Collection</h2>
-    <p>Discover our latest jewellery, cosmetics and accessories.</p>
+  <!-- TOP ANNOUNCEMENT -->
+  <div class="announcement">
+    ✨ Welcome to HURAIN — Luxury Collection Available ✨
   </div>
 
-  <div class="search">
-    <input
-      id="searchBox"
-      type="text"
-      placeholder="Search products..."
-      oninput="filterProducts()"
-    >
-  </div>
+  <!-- HEADER -->
+  <header class="header">
 
-  <div id="productsGrid" class="grid">
-    <p>Loading products...</p>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="title">
-    <h2>Contact HURAIN</h2>
-    <p>For orders and enquiries</p>
-  </div>
-
-  <div style="text-align:center">
-    <a
-      class="btn"
-      href="https://wa.me/919921181213?text=Assalamualaikum%20HURAIN%20I%20want%20to%20place%20an%20order."
-      target="_blank"
-    >
-      WhatsApp Us
-    </a>
-  </div>
-</section>
-
-<section id="adminSection">
-  <div class="title">
-    <h2>Admin Panel</h2>
-    <p>Only authorised HURAIN admin can manage products.</p>
-  </div>
-
-  <div class="admin">
-
-    <div id="loginBox">
-      <h3>Admin Login</h3>
-
-      <label>Email</label>
-      <input id="loginEmail" type="email" placeholder="Admin email">
-
-      <label>Password</label>
-      <input id="loginPassword" type="password" placeholder="Password">
-
-      <button class="btn" onclick="loginAdmin()">Login</button>
-
-      <div id="loginMessage"></div>
+    <div class="logo">
+      <span>H</span>
+      <div>
+        <strong>HURAIN</strong>
+        <small>IMITATION JEWELLERY & COSMETICS</small>
+      </div>
     </div>
 
-    <div id="adminBox" class="hidden">
+    <div class="header-actions">
+      <button aria-label="Search">⌕</button>
+      <button aria-label="Account">♙</button>
+      <button aria-label="Wishlist">♡</button>
 
-      <h3>Add Product</h3>
+      <button class="cart-button" onclick="openCart()">
+        🛍️ <span>Cart</span>
+        <b id="cart-count">0</b>
+      </button>
+    </div>
 
-      <label>Product Name</label>
-      <input id="productName" type="text" placeholder="Product name">
+  </header>
 
-      <label>Category</label>
-      <input id="productCategory" type="text" placeholder="Jewellery / Cosmetics / Accessories">
 
-      <label>Price</label>
-      <input id="productPrice" type="number" placeholder="Price">
+  <!-- NAVIGATION -->
+  <nav class="navigation">
 
-      <label>Sale Price</label>
-      <input id="productSalePrice" type="number" placeholder="Sale price">
+    <a href="#home">Home</a>
+    <a href="#categories">Jewellery</a>
+    <a href="#categories">Cosmetics</a>
+    <a href="#categories">Bangles</a>
+    <a href="#categories">Perfumes</a>
+    <a href="#categories">Hand Bags</a>
+    <a href="#categories">Accessories</a>
 
-      <label>Stock</label>
-      <input id="productStock" type="number" placeholder="Stock quantity">
+  </nav>
 
-      <label>Description</label>
-      <textarea id="productDescription" rows="4" placeholder="Product description"></textarea>
 
-      <label>Product Image</label>
-      <input id="productImage" type="file" accept="image/jpeg,image/png,image/webp">
+  <!-- HERO -->
+  <main id="home">
 
-      <button class="btn" onclick="addProduct()">Save Product</button>
+    <section class="hero">
 
-      <div id="adminMessage"></div>
+      <div class="hero-content">
 
-      <button class="btn danger" onclick="logoutAdmin()">
-        Logout
+        <p class="hero-small">HURAIN COLLECTION</p>
+
+        <h1>
+          BEAUTY THAT
+          <span>SHINES</span>
+        </h1>
+
+        <p>
+          Discover our premium collection of imitation jewellery,
+          cosmetics, bangles, perfumes, handbags and accessories.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#products" class="btn primary">
+            SHOP COLLECTION
+          </a>
+
+          <a
+            href="https://wa.me/919921181213"
+            class="btn secondary"
+            target="_blank"
+          >
+            ORDER ON WHATSAPP
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- TRUST FEATURES -->
+    <section class="trust-section">
+
+      <div class="trust-box">
+        <strong>31K+</strong>
+        <span>Happy Customers</span>
+      </div>
+
+      <div class="trust-box">
+        <strong>100+</strong>
+        <span>Brands Available</span>
+      </div>
+
+      <div class="trust-box">
+        <strong>100%</strong>
+        <span>Quality Collection</span>
+      </div>
+
+      <div class="trust-box">
+        <strong>WhatsApp</strong>
+        <span>Easy Ordering</span>
+      </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section id="categories" class="section">
+
+      <div class="section-heading">
+        <p>EXPLORE</p>
+        <h2>Shop By Category</h2>
+      </div>
+
+      <div class="categories-grid">
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">💎</div>
+          <h3>Jewellery</h3>
+          <span>Explore Collection</span>
+        </a>
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">💄</div>
+          <h3>Cosmetics</h3>
+          <span>Explore Collection</span>
+        </a>
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">✨</div>
+          <h3>Bangles</h3>
+          <span>Explore Collection</span>
+        </a>
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">🌹</div>
+          <h3>Perfumes</h3>
+          <span>Explore Collection</span>
+        </a>
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">👜</div>
+          <h3>Hand Bags</h3>
+          <span>Explore Collection</span>
+        </a>
+
+        <a href="#products" class="category-card">
+          <div class="category-icon">👑</div>
+          <h3>Accessories</h3>
+          <span>Explore Collection</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- FEATURED PRODUCTS -->
+    <section id="products" class="section products-section">
+
+      <div class="section-heading">
+        <p>OUR COLLECTION</p>
+        <h2>Featured Products</h2>
+
+        <span>
+          Discover our latest premium collection
+        </span>
+      </div>
+
+      <!-- Products will be loaded here by JavaScript -->
+      <div id="product-grid" class="product-grid">
+
+        <div class="empty-products">
+          <div>✨</div>
+          <h3>Collection Coming Soon</h3>
+          <p>
+            Our latest products will appear here.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- WHY HURAIN -->
+    <section class="why-section">
+
+      <div class="section-heading">
+        <p>WHY HURAIN</p>
+        <h2>Luxury You Can Trust</h2>
+      </div>
+
+      <div class="why-grid">
+
+        <div class="why-card">
+          <div>👑</div>
+          <h3>Premium Collection</h3>
+          <p>
+            Carefully selected products for your style.
+          </p>
+        </div>
+
+        <div class="why-card">
+          <div>💎</div>
+          <h3>Quality Products</h3>
+          <p>
+            Quality and elegance are our priority.
+          </p>
+        </div>
+
+        <div class="why-card">
+          <div>📦</div>
+          <h3>Easy Ordering</h3>
+          <p>
+            Order easily through WhatsApp.
+          </p>
+        </div>
+
+        <div class="why-card">
+          <div>❤️</div>
+          <h3>31K+ Family</h3>
+          <p>
+            Trusted by thousands of customers.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HOW TO ORDER -->
+    <section class="order-section">
+
+      <div class="section-heading">
+        <p>SIMPLE & EASY</p>
+        <h2>How To Order</h2>
+      </div>
+
+      <div class="order-steps">
+
+        <div class="order-step">
+          <span>01</span>
+          <h3>Choose Product</h3>
+          <p>
+            Select your favourite product.
+          </p>
+        </div>
+
+        <div class="order-step">
+          <span>02</span>
+          <h3>Add To Cart</h3>
+          <p>
+            Add products to your cart.
+          </p>
+        </div>
+
+        <div class="order-step">
+          <span>03</span>
+          <h3>Place Order</h3>
+          <p>
+            Send your order through WhatsApp.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="whatsapp-order">
+
+        <h3>Need Help With Your Order?</h3>
+
+        <p>
+          Contact HURAIN directly on WhatsApp.
+        </p>
+
+        <a
+          href="https://wa.me/919921181213"
+          target="_blank"
+          class="whatsapp-button"
+        >
+          💬 WhatsApp Us
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- CART -->
+  <div id="cart-overlay" class="cart-overlay">
+
+    <div class="cart-panel">
+
+      <button
+        class="close-cart"
+        onclick="closeCart()"
+      >
+        ×
       </button>
 
+      <h2>Your Cart</h2>
+
+      <div id="cart-items">
+        <p>Your cart is empty.</p>
+      </div>
+
+      <div class="cart-footer">
+
+        <strong>
+          Total:
+          ₹<span id="cart-total">0</span>
+        </strong>
+
+        <a
+          href="https://wa.me/919921181213"
+          target="_blank"
+          class="btn primary"
+        >
+          ORDER ON WHATSAPP
+        </a>
+
+      </div>
+
     </div>
 
   </div>
-</section>
-
-</main>
-
-<footer>
-  <p><strong>HURAIN</strong></p>
-  <p>Imitation Jewellery & Cosmetics</p>
-  <p style="margin-top:10px">© 2026 HURAIN. All Rights Reserved.</p>
-</footer>
 
 
-<script>
-  /*
-   * SUPABASE CONNECTION
-   * Secret/service_role key is NOT used.
-   */
+  <!-- FOOTER -->
+  <footer class="footer">
 
-  const SUPABASE_URL =
-    "https://tvrikpsmmetfatpnregx.supabase.co";
+    <div class="footer-grid">
 
-  const SUPABASE_KEY =
-    "sb_publishable_OhY1M8dfIv8NgBe6yGtSEA_kq56psUE";
+      <div class="footer-brand">
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
-
-  let allProducts = [];
-
-
-  async function loadProducts(){
-
-    const grid = document.getElementById("productsGrid");
-
-    const { data, error } = await supabaseClient
-      .from("products")
-      .select("*")
-      .order("id", { ascending:false });
-
-    if(error){
-
-      grid.innerHTML =
-        "<p>Products could not be loaded.</p>";
-
-      console.error(error);
-      return;
-    }
-
-    allProducts = data || [];
-
-    renderProducts(allProducts);
-  }
-
-
-  function renderProducts(products){
-
-    const grid =
-      document.getElementById("productsGrid");
-
-    if(!products.length){
-
-      grid.innerHTML =
-        "<p>No products available yet.</p>";
-
-      return;
-    }
-
-    grid.innerHTML = "";
-
-    products.forEach(product => {
-
-      const image =
-        product.image_url ||
-        "https://placehold.co/600x600?text=HURAIN";
-
-      const price =
-        product.sale_price ||
-        product.price ||
-        "";
-
-      const oldPrice =
-        product.sale_price &&
-        product.price &&
-        Number(product.price) >
-        Number(product.sale_price)
-          ? `<span class="old">₹${product.price}</span>`
-          : "";
-
-      const message =
-        encodeURIComponent(
-          `Assalamualaikum HURAIN, I want to order: ${product.name}`
-        );
-
-      grid.innerHTML += `
-        <div class="card">
-
-          <img
-            src="${image}"
-            alt="${escapeHTML(product.name || "HURAIN Product")}"
-            loading="lazy"
-          >
-
-          <div class="card-body">
-
-            <div class="category">
-              ${escapeHTML(product.category || "HURAIN")}
-            </div>
-
-            <h3>
-              ${escapeHTML(product.name || "")}
-            </h3>
-
-            <p>
-              ${escapeHTML(product.description || "")}
-            </p>
-
-            <div class="price">
-              ₹${price}
-              ${oldPrice}
-            </div>
-
-            <a
-              class="wa"
-              target="_blank"
-              href="https://wa.me/919921181213?text=${message}"
-            >
-              Order on WhatsApp
-            </a>
-
-          </div>
+        <div class="footer-logo">
+          <strong>HURAIN</strong>
+          <span>IMITATION JEWELLERY & COSMETICS</span>
         </div>
-      `;
-    });
-  }
 
+        <p>
+          Luxury imitation jewellery, cosmetics,
+          bangles, perfumes, handbags and accessories.
+        </p>
 
-  function filterProducts(){
+        <p class="social">
+          Instagram: @hurain_imitation
+        </p>
 
-    const query =
-      document
-        .getElementById("searchBox")
-        .value
-        .toLowerCase()
-        .trim();
+      </div>
 
-    const filtered =
-      allProducts.filter(product => {
 
-        const text =
-          `${product.name || ""} ${product.category || ""} ${product.description || ""}`
-          .toLowerCase();
+      <div>
+        <h3>Quick Links</h3>
 
-        return text.includes(query);
-      });
+        <a href="#home">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#products">Products</a>
+        <a href="#home">About HURAIN</a>
 
-    renderProducts(filtered);
-  }
+      </div>
 
 
-  async function loginAdmin(){
+      <div>
+        <h3>Categories</h3>
 
-    const email =
-      document.getElementById("loginEmail").value.trim();
+        <a href="#products">Jewellery</a>
+        <a href="#products">Cosmetics</a>
+        <a href="#products">Bangles</a>
+        <a href="#products">Perfumes</a>
 
-    const password =
-      document.getElementById("loginPassword").value;
+      </div>
 
-    const message =
-      document.getElementById("loginMessage");
 
-    if(!email || !password){
+      <div>
+        <h3>Contact</h3>
 
-      message.innerHTML =
-        `<div class="message">Please enter email and password.</div>`;
+        <p>📍 City Chowk, Aurangabad</p>
 
-      return;
-    }
+        <a
+          href="https://wa.me/919921181213"
+          target="_blank"
+        >
+          📱 +91 99211 81213
+        </a>
 
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+      </div>
 
-    if(error){
+    </div>
 
-      message.innerHTML =
-        `<div class="message">${escapeHTML(error.message)}</div>`;
 
-      return;
-    }
+    <div class="footer-bottom">
 
-    message.innerHTML =
-      `<div class="message">Login successful.</div>`;
+      <p>
+        © 2026 HURAIN. All Rights Reserved.
+      </p>
 
-    document
-      .getElementById("loginBox")
-      .classList.add("hidden");
+      <p>
+        Luxury • Beauty • Elegance
+      </p>
 
-    document
-      .getElementById("adminBox")
-      .classList.remove("hidden");
-  }
+    </div>
 
+  </footer>
 
-  async function logoutAdmin(){
 
-    await supabaseClient.auth.signOut();
-
-    document
-      .getElementById("adminBox")
-      .classList.add("hidden");
-
-    document
-      .getElementById("loginBox")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("loginPassword")
-      .value = "";
-  }
-
-
-  async function addProduct(){
-
-    const message =
-      document.getElementById("adminMessage");
-
-    const name =
-      document.getElementById("productName").value.trim();
-
-    const category =
-      document.getElementById("productCategory").value.trim();
-
-    const price =
-      document.getElementById("productPrice").value;
-
-    const salePrice =
-      document.getElementById("productSalePrice").value;
-
-    const stock =
-      document.getElementById("productStock").value;
-
-    const description =
-      document.getElementById("productDescription").value.trim();
-
-    const file =
-      document.getElementById("productImage").files[0];
-
-
-    if(!name){
-
-      message.innerHTML =
-        `<div class="message">Product name is required.</div>`;
-
-      return;
-    }
-
-
-    const {
-      data: {
-        user
-      }
-    } =
-      await supabaseClient.auth.getUser();
-
-
-    if(!user){
-
-      message.innerHTML =
-        `<div class="message">Please login first.</div>`;
-
-      return;
-    }
-
-
-    let imageUrl = "";
-
-
-    if(file){
-
-      if(file.size > 5 * 1024 * 1024){
-
-        message.innerHTML =
-          `<div class="message">Image must be 5 MB or smaller.</div>`;
-
-        return;
-      }
-
-
-      const allowed =
-        [
-          "image/jpeg",
-          "image/png",
-          "image/webp"
-        ];
-
-
-      if(!allowed.includes(file.type)){
-
-        message.innerHTML =
-          `<div class="message">Only JPG, PNG and WEBP images are allowed.</div>`;
-
-        return;
-      }
-
-
-      const extension =
-        file.name.split(".").pop();
-
-
-      const fileName =
-        `${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
-
-
-      const filePath =
-        `${user.id}/${fileName}`;
-
-
-      const { error: uploadError } =
-        await supabaseClient
-          .storage
-          .from("product-images")
-          .upload(filePath, file);
-
-
-      if(uploadError){
-
-        message.innerHTML =
-          `<div class="message">${escapeHTML(uploadError.message)}</div>`;
-
-        return;
-      }
-
-
-      /*
-       * Bucket is private.
-       * For now we store the file path.
-       * We will create secure image URLs in the next step.
-       */
-
-      imageUrl = filePath;
-    }
-
-
-    const { error } =
-      await supabaseClient
-        .from("products")
-        .insert({
-
-          name: name,
-
-          category: category,
-
-          price:
-            price
-              ? Number(price)
-              : null,
-
-          sale_price:
-            salePrice
-              ? Number(salePrice)
-              : null,
-
-          stock:
-            stock
-              ? Number(stock)
-              : 0,
-
-          description: description,
-
-          image_url: imageUrl,
-
-          is_active: true
-
-        });
-
-
-    if(error){
-
-      message.innerHTML =
-        `<div class="message">${escapeHTML(error.message)}</div>`;
-
-      return;
-    }
-
-
-    message.innerHTML =
-      `<div class="message">Product saved successfully.</div>`;
-
-
-    document
-      .getElementById("productName")
-      .value = "";
-
-    document
-      .getElementById("productCategory")
-      .value = "";
-
-    document
-      .getElementById("productPrice")
-      .value = "";
-
-    document
-      .getElementById("productSalePrice")
-      .value = "";
-
-    document
-      .getElementById("productStock")
-      .value = "";
-
-    document
-      .getElementById("productDescription")
-      .value = "";
-
-    document
-      .getElementById("productImage")
-      .value = "";
-
-    loadProducts();
-  }
-
-
-  function escapeHTML(value){
-
-    return String(value)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-
-  loadProducts();
-</script>
+  <script src="script.js"></script>
 
 </body>
 </html>
