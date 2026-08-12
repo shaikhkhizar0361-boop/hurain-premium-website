@@ -1,73 +1,272 @@
 // ==========================================
-// HURAIN - WEBSITE SCRIPT
+// HURAIN E-COMMERCE WEBSITE
+// CART + CATEGORY + WISHLIST SYSTEM
 // ==========================================
 
-let cart = [];
-
-let activeCategory = "all";
+const WHATSAPP_NUMBER = "919921181213";
 
 
 // ==========================================
-// DEMO PRODUCTS
+// PRODUCTS
 // ==========================================
 
 const products = [
-
   {
     id: 1,
     name: "Luxury Jewellery Set",
     category: "Jewellery",
     price: 1499,
-    image:
-      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: 2,
     name: "Premium Beauty Collection",
     category: "Cosmetics",
     price: 999,
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: 3,
     name: "Elegant Bangles Set",
     category: "Bangles",
     price: 799,
-    image:
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: 4,
     name: "Luxury Perfume",
     category: "Perfumes",
     price: 1299,
-    image:
-      "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: 5,
     name: "Premium Hand Bag",
     category: "Hand Bags",
     price: 1799,
-    image:
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: 6,
     name: "Luxury Accessories",
     category: "Accessories",
     price: 699,
-    image:
-      "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80"
+    image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+
+// ==========================================
+// CART
+// ==========================================
+
+let cart = loadCart();
+
+
+// ==========================================
+// WISHLIST
+// ==========================================
+
+let wishlist = loadWishlist();
+
+
+// ==========================================
+// ACTIVE CATEGORY
+// ==========================================
+
+let activeCategory = "all";
+
+
+// ==========================================
+// LOCAL STORAGE - CART
+// ==========================================
+
+function loadCart() {
+
+  try {
+
+    const savedCart =
+      localStorage.getItem("hurain_cart");
+
+    if (!savedCart) {
+      return [];
+    }
+
+    const parsedCart =
+      JSON.parse(savedCart);
+
+    return Array.isArray(parsedCart)
+      ? parsedCart
+      : [];
+
+  } catch (error) {
+
+    console.error(
+      "Cart loading error:",
+      error
+    );
+
+    return [];
+
   }
 
-];
+}
+
+
+function saveCart() {
+
+  try {
+
+    localStorage.setItem(
+      "hurain_cart",
+      JSON.stringify(cart)
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Cart saving error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ==========================================
+// LOCAL STORAGE - WISHLIST
+// ==========================================
+
+function loadWishlist() {
+
+  try {
+
+    const savedWishlist =
+      localStorage.getItem(
+        "hurain_wishlist"
+      );
+
+    if (!savedWishlist) {
+      return [];
+    }
+
+    const parsedWishlist =
+      JSON.parse(savedWishlist);
+
+    return Array.isArray(parsedWishlist)
+      ? parsedWishlist
+      : [];
+
+  } catch (error) {
+
+    console.error(
+      "Wishlist loading error:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+function saveWishlist() {
+
+  try {
+
+    localStorage.setItem(
+      "hurain_wishlist",
+      JSON.stringify(wishlist)
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Wishlist saving error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ==========================================
+// PRICE FORMAT
+// ==========================================
+
+function formatPrice(price) {
+
+  return Number(price || 0)
+    .toLocaleString("en-IN");
+
+}
+
+
+// ==========================================
+// HTML SAFETY
+// ==========================================
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+// ==========================================
+// PRODUCT FILTER
+// ==========================================
+
+function filterProducts(category) {
+
+  activeCategory =
+    category || "all";
+
+  const filterText =
+    document.getElementById(
+      "category-filter"
+    );
+
+  if (filterText) {
+
+    filterText.textContent =
+      activeCategory === "all"
+        ? "Showing All Products"
+        : "Showing " +
+          activeCategory +
+          " Products";
+
+  }
+
+  loadProducts();
+
+  const productsSection =
+    document.getElementById(
+      "products"
+    );
+
+  if (productsSection) {
+
+    setTimeout(() => {
+
+      productsSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }, 50);
+
+  }
+
+}
 
 
 // ==========================================
@@ -77,26 +276,32 @@ const products = [
 function loadProducts() {
 
   const productGrid =
-    document.getElementById("product-grid");
+    document.getElementById(
+      "product-grid"
+    );
 
-  if (!productGrid) return;
+  if (!productGrid) {
+    return;
+  }
 
 
-  let filteredProducts = products;
+  let visibleProducts =
+    products;
 
 
   if (activeCategory !== "all") {
 
-    filteredProducts =
+    visibleProducts =
       products.filter(
         product =>
-          product.category === activeCategory
+          product.category ===
+          activeCategory
       );
 
   }
 
 
-  if (filteredProducts.length === 0) {
+  if (visibleProducts.length === 0) {
 
     productGrid.innerHTML = `
 
@@ -124,109 +329,162 @@ function loadProducts() {
   productGrid.innerHTML = "";
 
 
-  filteredProducts.forEach(product => {
+  visibleProducts.forEach(
+    product => {
 
-    const card =
-      document.createElement("div");
+      const cartItem =
+        cart.find(
+          item =>
+            item.id === product.id
+        );
 
-    card.className =
-      "product-card";
+
+      const quantity =
+        cartItem
+          ? cartItem.quantity
+          : 0;
 
 
-    card.innerHTML = `
+      const isFavourite =
+        wishlist.includes(
+          product.id
+        );
 
-      <img
-        src="${product.image}"
-        alt="${escapeHtml(product.name)}"
-        loading="lazy"
-      >
 
-      <div class="product-info">
+      const card =
+        document.createElement(
+          "div"
+        );
 
-        <div class="product-category">
-          ${escapeHtml(product.category)}
-        </div>
 
-        <h3>
-          ${escapeHtml(product.name)}
-        </h3>
+      card.className =
+        "product-card";
 
-        <div class="product-price">
-          ₹${formatPrice(product.price)}
-        </div>
 
-        <button
-          type="button"
-          class="add-cart"
-          onclick="addToCart(${product.id})"
+      card.innerHTML = `
+
+        <div
+          class="product-image-wrapper"
+          style="position:relative;"
         >
-          ADD TO CART
-        </button>
 
-      </div>
+          <img
+            src="${product.image}"
+            alt="${escapeHtml(product.name)}"
+            loading="lazy"
+          >
 
-    `;
+          <button
+            type="button"
+            class="wishlist-button"
+            onclick="toggleWishlist(${product.id})"
+            aria-label="Add to wishlist"
+            style="
+              position:absolute;
+              top:12px;
+              right:12px;
+              z-index:5;
+              border:0;
+              background:rgba(255,255,255,0.92);
+              border-radius:50%;
+              width:40px;
+              height:40px;
+              cursor:pointer;
+              font-size:20px;
+            "
+          >
+            ${isFavourite ? "❤️" : "♡"}
+          </button>
+
+        </div>
 
 
-    productGrid.appendChild(card);
+        <div class="product-info">
 
-  });
+          <div class="product-category">
+            ${escapeHtml(product.category)}
+          </div>
 
-}
+          <h3>
+            ${escapeHtml(product.name)}
+          </h3>
 
-
-// ==========================================
-// FILTER PRODUCTS
-// ==========================================
-
-function filterProducts(category) {
-
-  activeCategory =
-    category || "all";
+          <div class="product-price">
+            ₹${formatPrice(product.price)}
+          </div>
 
 
-  const filterText =
-    document.getElementById("category-filter");
+          <div
+            class="product-cart-control"
+            style="margin-top:12px;"
+          >
+
+            ${
+              quantity === 0
+
+                ? `
+
+                  <button
+                    type="button"
+                    class="add-cart"
+                    onclick="addToCart(${product.id})"
+                  >
+                    ADD TO CART
+                  </button>
+
+                `
+
+                : `
+
+                  <div
+                    class="quantity-control"
+                    style="
+                      display:flex;
+                      align-items:center;
+                      justify-content:center;
+                      gap:18px;
+                      border:1px solid #ddd;
+                      border-radius:8px;
+                      padding:8px;
+                    "
+                  >
+
+                    <button
+                      type="button"
+                      onclick="decreaseQuantity(${product.id})"
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+
+                    <strong>
+                      ${quantity}
+                    </strong>
+
+                    <button
+                      type="button"
+                      onclick="increaseQuantity(${product.id})"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+                `
+            }
+
+          </div>
+
+        </div>
+
+      `;
 
 
-  if (filterText) {
-
-    if (activeCategory === "all") {
-
-      filterText.textContent =
-        "Showing All Products";
-
-    } else {
-
-      filterText.textContent =
-        "Showing " +
-        activeCategory +
-        " Products";
+      productGrid.appendChild(card);
 
     }
-
-  }
-
-
-  loadProducts();
-
-
-  const productsSection =
-    document.getElementById("products");
-
-
-  if (productsSection) {
-
-    setTimeout(() => {
-
-      productsSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    }, 50);
-
-  }
+  );
 
 }
 
@@ -239,13 +497,16 @@ function addToCart(productId) {
 
   const product =
     products.find(
-      item => item.id === productId
+      item =>
+        item.id === productId
     );
 
 
   if (!product) {
 
-    alert("Product not found.");
+    alert(
+      "Product could not be found."
+    );
 
     return;
 
@@ -254,7 +515,8 @@ function addToCart(productId) {
 
   const existing =
     cart.find(
-      item => item.id === productId
+      item =>
+        item.id === productId
     );
 
 
@@ -283,66 +545,86 @@ function addToCart(productId) {
   }
 
 
+  saveCart();
+
   updateCart();
 
-
-  openCart();
+  loadProducts();
 
 }
 
 
 // ==========================================
-// INCREASE QUANTITY
+// INCREASE
 // ==========================================
 
 function increaseQuantity(productId) {
 
   const item =
     cart.find(
-      product => product.id === productId
+      product =>
+        product.id === productId
     );
 
 
-  if (!item) return;
+  if (!item) {
 
-
-  item.quantity += 1;
-
-
-  updateCart();
-
-}
-
-
-// ==========================================
-// DECREASE QUANTITY
-// ==========================================
-
-function decreaseQuantity(productId) {
-
-  const item =
-    cart.find(
-      product => product.id === productId
-    );
-
-
-  if (!item) return;
-
-
-  if (item.quantity > 1) {
-
-    item.quantity -= 1;
-
-  } else {
-
-    removeFromCart(productId);
+    addToCart(productId);
 
     return;
 
   }
 
 
+  item.quantity += 1;
+
+
+  saveCart();
+
   updateCart();
+
+  loadProducts();
+
+}
+
+
+// ==========================================
+// DECREASE
+// ==========================================
+
+function decreaseQuantity(productId) {
+
+  const item =
+    cart.find(
+      product =>
+        product.id === productId
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  item.quantity -= 1;
+
+
+  if (item.quantity <= 0) {
+
+    cart =
+      cart.filter(
+        product =>
+          product.id !== productId
+      );
+
+  }
+
+
+  saveCart();
+
+  updateCart();
+
+  loadProducts();
 
 }
 
@@ -355,11 +637,44 @@ function removeFromCart(productId) {
 
   cart =
     cart.filter(
-      item => item.id !== productId
+      item =>
+        item.id !== productId
     );
 
 
+  saveCart();
+
   updateCart();
+
+  loadProducts();
+
+}
+
+
+// ==========================================
+// CART TOTAL
+// ==========================================
+
+function getCartQuantity() {
+
+  return cart.reduce(
+    (total, item) =>
+      total + item.quantity,
+    0
+  );
+
+}
+
+
+function getCartTotal() {
+
+  return cart.reduce(
+    (total, item) =>
+      total +
+      item.price *
+      item.quantity,
+    0
+  );
 
 }
 
@@ -371,37 +686,25 @@ function removeFromCart(productId) {
 function updateCart() {
 
   const cartCount =
-    document.getElementById("cart-count");
-
-  const cartItems =
-    document.getElementById("cart-items");
-
-  const cartTotal =
-    document.getElementById("cart-total");
-
-
-  const totalQuantity =
-    cart.reduce(
-      (total, item) =>
-        total + item.quantity,
-      0
+    document.getElementById(
+      "cart-count"
     );
 
+  const cartItems =
+    document.getElementById(
+      "cart-items"
+    );
 
-  const totalPrice =
-    cart.reduce(
-      (total, item) =>
-        total +
-        item.price *
-        item.quantity,
-      0
+  const cartTotal =
+    document.getElementById(
+      "cart-total"
     );
 
 
   if (cartCount) {
 
     cartCount.textContent =
-      totalQuantity;
+      getCartQuantity();
 
   }
 
@@ -409,12 +712,16 @@ function updateCart() {
   if (cartTotal) {
 
     cartTotal.textContent =
-      formatPrice(totalPrice);
+      formatPrice(
+        getCartTotal()
+      );
 
   }
 
 
-  if (!cartItems) return;
+  if (!cartItems) {
+    return;
+  }
 
 
   if (cart.length === 0) {
@@ -439,69 +746,75 @@ function updateCart() {
   cartItems.innerHTML = "";
 
 
-  cart.forEach(item => {
+  cart.forEach(
+    item => {
 
-    const cartItem =
-      document.createElement("div");
-
-
-    cartItem.className =
-      "cart-item";
-
-
-    cartItem.innerHTML = `
-
-      <div class="cart-item-info">
-
-        <strong>
-          ${escapeHtml(item.name)}
-        </strong>
-
-        <small>
-          ₹${formatPrice(item.price)}
-        </small>
-
-      </div>
+      const row =
+        document.createElement(
+          "div"
+        );
 
 
-      <div class="cart-item-actions">
+      row.className =
+        "cart-item";
+
+
+      row.innerHTML = `
+
+        <div
+          class="cart-item-info"
+        >
+
+          <strong>
+            ${escapeHtml(item.name)}
+          </strong>
+
+          <small>
+            ₹${formatPrice(item.price)}
+          </small>
+
+        </div>
+
+
+        <div
+          class="cart-item-actions"
+        >
+
+          <button
+            type="button"
+            onclick="decreaseQuantity(${item.id})"
+          >
+            −
+          </button>
+
+          <span>
+            ${item.quantity}
+          </span>
+
+          <button
+            type="button"
+            onclick="increaseQuantity(${item.id})"
+          >
+            +
+          </button>
+
+        </div>
+
 
         <button
           type="button"
-          onclick="decreaseQuantity(${item.id})"
-          aria-label="Decrease quantity"
+          onclick="removeFromCart(${item.id})"
         >
-          −
+          Remove
         </button>
 
-        <span>
-          ${item.quantity}
-        </span>
-
-        <button
-          type="button"
-          onclick="increaseQuantity(${item.id})"
-          aria-label="Increase quantity"
-        >
-          +
-        </button>
-
-      </div>
+      `;
 
 
-      <button
-        type="button"
-        onclick="removeFromCart(${item.id})"
-      >
-        Remove
-      </button>
+      cartItems.appendChild(row);
 
-    `;
-
-
-    cartItems.appendChild(cartItem);
-
-  });
+    }
+  );
 
 }
 
@@ -513,13 +826,22 @@ function updateCart() {
 function openCart() {
 
   const overlay =
-    document.getElementById("cart-overlay");
+    document.getElementById(
+      "cart-overlay"
+    );
 
 
-  if (!overlay) return;
+  if (!overlay) {
+    return;
+  }
 
 
-  overlay.classList.add("active");
+  updateCart();
+
+
+  overlay.classList.add(
+    "active"
+  );
 
 
   document.body.style.overflow =
@@ -535,17 +857,56 @@ function openCart() {
 function closeCart() {
 
   const overlay =
-    document.getElementById("cart-overlay");
+    document.getElementById(
+      "cart-overlay"
+    );
 
 
-  if (!overlay) return;
+  if (!overlay) {
+    return;
+  }
 
 
-  overlay.classList.remove("active");
+  overlay.classList.remove(
+    "active"
+  );
 
 
   document.body.style.overflow =
     "";
+
+}
+
+
+// ==========================================
+// WISHLIST
+// ==========================================
+
+function toggleWishlist(productId) {
+
+  const index =
+    wishlist.indexOf(
+      productId
+    );
+
+
+  if (index === -1) {
+
+    wishlist.push(productId);
+
+  } else {
+
+    wishlist.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  saveWishlist();
+
+  loadProducts();
 
 }
 
@@ -571,64 +932,49 @@ function orderOnWhatsApp() {
     "HURAIN NEW ORDER\n\n";
 
 
-  cart.forEach(item => {
+  cart.forEach(
+    item => {
 
-    message +=
-      "Product: " +
-      item.name +
-      "\n";
+      message +=
+        "Product: " +
+        item.name +
+        "\n";
 
-    message +=
-      "Quantity: " +
-      item.quantity +
-      "\n";
+      message +=
+        "Quantity: " +
+        item.quantity +
+        "\n";
 
-    message +=
-      "Product Total: ₹" +
-      formatPrice(
-        item.price *
-        item.quantity
-      ) +
-      "\n\n";
+      message +=
+        "Product Total: ₹" +
+        formatPrice(
+          item.price *
+          item.quantity
+        ) +
+        "\n\n";
 
-  });
+    }
+  );
 
-
-  const grandTotal =
-    cart.reduce(
-      (total, item) =>
-        total +
-        item.price *
-        item.quantity,
-      0
-    );
-
-
-  message +=
-    "Delivery: To Be Confirmed\n";
 
   message +=
     "Grand Total: ₹" +
-    formatPrice(grandTotal);
+    formatPrice(
+      getCartTotal()
+    );
 
 
-  const encodedMessage =
-    encodeURIComponent(message);
-
-
-  const whatsappNumber =
-    "919921181213";
-
-
-  const whatsappURL =
+  const url =
     "https://wa.me/" +
-    whatsappNumber +
+    WHATSAPP_NUMBER +
     "?text=" +
-    encodedMessage;
+    encodeURIComponent(
+      message
+    );
 
 
   window.open(
-    whatsappURL,
+    url,
     "_blank",
     "noopener,noreferrer"
   );
@@ -637,7 +983,7 @@ function orderOnWhatsApp() {
 
 
 // ==========================================
-// CLOSE CART WHEN CLICKING OUTSIDE
+// CLICK OUTSIDE CART
 // ==========================================
 
 document.addEventListener(
@@ -649,12 +995,10 @@ document.addEventListener(
         "cart-overlay"
       );
 
-
     const panel =
       document.querySelector(
         ".cart-panel"
       );
-
 
     const cartButton =
       document.querySelector(
@@ -662,14 +1006,25 @@ document.addEventListener(
       );
 
 
-    if (!overlay || !panel) return;
+    if (
+      !overlay ||
+      !panel
+    ) {
+      return;
+    }
 
 
     if (
-      overlay.classList.contains("active") &&
-      !panel.contains(event.target) &&
+      overlay.classList.contains(
+        "active"
+      ) &&
+      !panel.contains(
+        event.target
+      ) &&
       (!cartButton ||
-        !cartButton.contains(event.target))
+        !cartButton.contains(
+          event.target
+        ))
     ) {
 
       closeCart();
@@ -681,14 +1036,16 @@ document.addEventListener(
 
 
 // ==========================================
-// ESCAPE KEY CLOSE CART
+// ESC KEY
 // ==========================================
 
 document.addEventListener(
   "keydown",
   function(event) {
 
-    if (event.key === "Escape") {
+    if (
+      event.key === "Escape"
+    ) {
 
       closeCart();
 
@@ -699,35 +1056,7 @@ document.addEventListener(
 
 
 // ==========================================
-// FORMAT PRICE
-// ==========================================
-
-function formatPrice(price) {
-
-  return Number(price || 0)
-    .toLocaleString("en-IN");
-
-}
-
-
-// ==========================================
-// BASIC HTML ESCAPE
-// ==========================================
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-// ==========================================
-// INITIALIZE WEBSITE
+// INITIALIZE
 // ==========================================
 
 document.addEventListener(
