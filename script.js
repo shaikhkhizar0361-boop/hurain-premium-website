@@ -1,5 +1,7 @@
 // ======================================================
-// HURAIN WEBSITE - FINAL SCRIPT
+// HURAIN FINAL WEBSITE SCRIPT
+// 60 PRODUCTS + PRODUCT DETAILS + CART + WISHLIST
+// CHECKOUT + WHATSAPP ORDER
 // ======================================================
 
 const WHATSAPP_NUMBER = "919921181213";
@@ -7,64 +9,516 @@ const DELIVERY_CHARGE = 100;
 
 
 // ======================================================
-// DEMO PRODUCTS
+// PRODUCTS
+// 6 CATEGORIES × 10 PRODUCTS = 60 PRODUCTS
+// बाद में सिर्फ name / price / image बदलना है
 // ======================================================
 
 const products = [
+
+  // ================= JEWELLERY =================
+
   {
     id: 1,
-    name: "Luxury Jewellery Set",
+    name: "Luxury Jewellery Set 01",
     category: "Jewellery",
     price: 1499,
     image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful premium imitation jewellery set for an elegant luxury look.",
-    stock: true
+    description: "Premium luxury imitation jewellery collection."
   },
   {
     id: 2,
-    name: "Premium Beauty Collection",
-    category: "Cosmetics",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
-    description: "Premium beauty and cosmetics collection selected by HURAIN.",
-    stock: true
+    name: "Luxury Jewellery Set 02",
+    category: "Jewellery",
+    price: 1599,
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant jewellery designed for a premium look."
   },
   {
     id: 3,
-    name: "Elegant Bangles Set",
-    category: "Bangles",
-    price: 799,
+    name: "Luxury Jewellery Set 03",
+    category: "Jewellery",
+    price: 1799,
     image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant bangles collection designed for your special occasions.",
-    stock: true
+    description: "Beautiful imitation jewellery for special occasions."
   },
   {
     id: 4,
-    name: "Luxury Perfume",
-    category: "Perfumes",
+    name: "Luxury Jewellery Set 04",
+    category: "Jewellery",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
-    description: "A premium fragrance collection with a luxurious finish.",
-    stock: true
+    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish jewellery collection from HURAIN."
   },
   {
     id: 5,
-    name: "Premium Hand Bag",
-    category: "Hand Bags",
-    price: 1799,
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish premium handbag suitable for everyday and special occasions.",
-    stock: true
+    name: "Luxury Jewellery Set 05",
+    category: "Jewellery",
+    price: 1899,
+    image: "https://images.unsplash.com/photo-1598560917807-1bae44bd2be8?auto=format&fit=crop&w=900&q=80",
+    description: "Premium design with elegant finishing."
   },
   {
     id: 6,
-    name: "Luxury Accessories",
+    name: "Luxury Jewellery Set 06",
+    category: "Jewellery",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant everyday jewellery collection."
+  },
+  {
+    id: 7,
+    name: "Luxury Jewellery Set 07",
+    category: "Jewellery",
+    price: 1399,
+    image: "https://images.unsplash.com/photo-1599459183200-59c7687a027b?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful premium imitation jewellery."
+  },
+  {
+    id: 8,
+    name: "Luxury Jewellery Set 08",
+    category: "Jewellery",
+    price: 1699,
+    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
+    description: "Perfect jewellery for parties and occasions."
+  },
+  {
+    id: 9,
+    name: "Luxury Jewellery Set 09",
+    category: "Jewellery",
+    price: 1199,
+    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
+    description: "Premium style at an attractive price."
+  },
+  {
+    id: 10,
+    name: "Luxury Jewellery Set 10",
+    category: "Jewellery",
+    price: 1999,
+    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury jewellery collection by HURAIN."
+  },
+
+
+  // ================= COSMETICS =================
+
+  {
+    id: 11,
+    name: "Premium Beauty Collection 01",
+    category: "Cosmetics",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
+    description: "Premium cosmetics collection."
+  },
+  {
+    id: 12,
+    name: "Premium Beauty Collection 02",
+    category: "Cosmetics",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
+    description: "Beauty essentials for your daily routine."
+  },
+  {
+    id: 13,
+    name: "Premium Beauty Collection 03",
+    category: "Cosmetics",
+    price: 1199,
+    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=80",
+    description: "Premium makeup and beauty products."
+  },
+  {
+    id: 14,
+    name: "Premium Beauty Collection 04",
+    category: "Cosmetics",
+    price: 749,
+    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful cosmetics collection."
+  },
+  {
+    id: 15,
+    name: "Premium Beauty Collection 05",
+    category: "Cosmetics",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=900&q=80",
+    description: "Premium beauty products from HURAIN."
+  },
+  {
+    id: 16,
+    name: "Premium Beauty Collection 06",
+    category: "Cosmetics",
+    price: 699,
+    image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=900&q=80",
+    description: "Everyday beauty essentials."
+  },
+  {
+    id: 17,
+    name: "Premium Beauty Collection 07",
+    category: "Cosmetics",
+    price: 1099,
+    image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=80",
+    description: "Premium cosmetic collection."
+  },
+  {
+    id: 18,
+    name: "Premium Beauty Collection 08",
+    category: "Cosmetics",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1599733594230-6b823276abcc?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant beauty products."
+  },
+  {
+    id: 19,
+    name: "Premium Beauty Collection 09",
+    category: "Cosmetics",
+    price: 1499,
+    image: "https://images.unsplash.com/photo-1619451334792-150fd785ee74?auto=format&fit=crop&w=900&q=80",
+    description: "Premium cosmetics for your beauty collection."
+  },
+  {
+    id: 20,
+    name: "Premium Beauty Collection 10",
+    category: "Cosmetics",
+    price: 799,
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
+    description: "Quality cosmetics collection."
+  },
+
+
+  // ================= BANGLES =================
+
+  {
+    id: 21,
+    name: "Elegant Bangles Set 01",
+    category: "Bangles",
+    price: 799,
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant imitation bangles."
+  },
+  {
+    id: 22,
+    name: "Elegant Bangles Set 02",
+    category: "Bangles",
+    price: 599,
+    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful bangles collection."
+  },
+  {
+    id: 23,
+    name: "Elegant Bangles Set 03",
+    category: "Bangles",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1598560917807-1bae44bd2be8?auto=format&fit=crop&w=900&q=80",
+    description: "Premium bangles for special occasions."
+  },
+  {
+    id: 24,
+    name: "Elegant Bangles Set 04",
+    category: "Bangles",
+    price: 699,
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish bangles collection."
+  },
+  {
+    id: 25,
+    name: "Elegant Bangles Set 05",
+    category: "Bangles",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1599459183200-59c7687a027b?auto=format&fit=crop&w=900&q=80",
+    description: "Premium traditional bangles."
+  },
+  {
+    id: 26,
+    name: "Elegant Bangles Set 06",
+    category: "Bangles",
+    price: 749,
+    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant bangle set."
+  },
+  {
+    id: 27,
+    name: "Elegant Bangles Set 07",
+    category: "Bangles",
+    price: 849,
+    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful imitation bangles."
+  },
+  {
+    id: 28,
+    name: "Elegant Bangles Set 08",
+    category: "Bangles",
+    price: 649,
+    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish bangles for everyday use."
+  },
+  {
+    id: 29,
+    name: "Elegant Bangles Set 09",
+    category: "Bangles",
+    price: 949,
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
+    description: "Premium bangle collection."
+  },
+  {
+    id: 30,
+    name: "Elegant Bangles Set 10",
+    category: "Bangles",
+    price: 1099,
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury bangle collection."
+  },
+
+
+  // ================= PERFUMES =================
+
+  {
+    id: 31,
+    name: "Luxury Perfume 01",
+    category: "Perfumes",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
+    description: "Premium fragrance collection."
+  },
+  {
+    id: 32,
+    name: "Luxury Perfume 02",
+    category: "Perfumes",
+    price: 1499,
+    image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant long-lasting fragrance."
+  },
+  {
+    id: 33,
+    name: "Luxury Perfume 03",
+    category: "Perfumes",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=900&q=80",
+    description: "Premium perfume for everyday elegance."
+  },
+  {
+    id: 34,
+    name: "Luxury Perfume 04",
+    category: "Perfumes",
+    price: 1199,
+    image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful premium fragrance."
+  },
+  {
+    id: 35,
+    name: "Luxury Perfume 05",
+    category: "Perfumes",
+    price: 1599,
+    image: "https://images.unsplash.com/photo-1563170351-be82bc888aa4?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury fragrance collection."
+  },
+  {
+    id: 36,
+    name: "Luxury Perfume 06",
+    category: "Perfumes",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1587017539504-67cfbddac569?auto=format&fit=crop&w=900&q=80",
+    description: "Premium fragrance at an attractive price."
+  },
+  {
+    id: 37,
+    name: "Luxury Perfume 07",
+    category: "Perfumes",
+    price: 1099,
+    image: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant perfume collection."
+  },
+  {
+    id: 38,
+    name: "Luxury Perfume 08",
+    category: "Perfumes",
+    price: 1399,
+    image: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=900&q=80",
+    description: "Premium luxury fragrance."
+  },
+  {
+    id: 39,
+    name: "Luxury Perfume 09",
+    category: "Perfumes",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=900&q=80",
+    description: "Long-lasting premium perfume."
+  },
+  {
+    id: 40,
+    name: "Luxury Perfume 10",
+    category: "Perfumes",
+    price: 1699,
+    image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury perfume for special occasions."
+  },
+
+
+  // ================= HAND BAGS =================
+
+  {
+    id: 41,
+    name: "Premium Hand Bag 01",
+    category: "Hand Bags",
+    price: 1799,
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80",
+    description: "Premium stylish handbag."
+  },
+  {
+    id: 42,
+    name: "Premium Hand Bag 02",
+    category: "Hand Bags",
+    price: 1999,
+    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant handbag collection."
+  },
+  {
+    id: 43,
+    name: "Premium Hand Bag 03",
+    category: "Hand Bags",
+    price: 1599,
+    image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=80",
+    description: "Premium fashion handbag."
+  },
+  {
+    id: 44,
+    name: "Premium Hand Bag 04",
+    category: "Hand Bags",
+    price: 2299,
+    image: "https://images.unsplash.com/photo-1585488437808-9b0e3b4b3b7a?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury handbag for every occasion."
+  },
+  {
+    id: 45,
+    name: "Premium Hand Bag 05",
+    category: "Hand Bags",
+    price: 1899,
+    image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish premium handbag."
+  },
+  {
+    id: 46,
+    name: "Premium Hand Bag 06",
+    category: "Hand Bags",
+    price: 1499,
+    image: "https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant everyday handbag."
+  },
+  {
+    id: 47,
+    name: "Premium Hand Bag 07",
+    category: "Hand Bags",
+    price: 2499,
+    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury premium handbag."
+  },
+  {
+    id: 48,
+    name: "Premium Hand Bag 08",
+    category: "Hand Bags",
+    price: 1699,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful handbag collection."
+  },
+  {
+    id: 49,
+    name: "Premium Hand Bag 09",
+    category: "Hand Bags",
+    price: 2199,
+    image: "https://images.unsplash.com/photo-1564222259826-4a8d6c1a1b0b?auto=format&fit=crop&w=900&q=80",
+    description: "Premium fashion handbag."
+  },
+  {
+    id: 50,
+    name: "Premium Hand Bag 10",
+    category: "Hand Bags",
+    price: 1999,
+    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury handbag collection."
+  },
+
+
+  // ================= ACCESSORIES =================
+
+  {
+    id: 51,
+    name: "Luxury Accessories 01",
     category: "Accessories",
     price: 699,
     image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80",
-    description: "Premium accessories to complete your luxury style.",
-    stock: true
+    description: "Premium fashion accessories."
+  },
+  {
+    id: 52,
+    name: "Luxury Accessories 02",
+    category: "Accessories",
+    price: 799,
+    image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant accessories collection."
+  },
+  {
+    id: 53,
+    name: "Luxury Accessories 03",
+    category: "Accessories",
+    price: 599,
+    image: "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish everyday accessories."
+  },
+  {
+    id: 54,
+    name: "Luxury Accessories 04",
+    category: "Accessories",
+    price: 899,
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
+    description: "Premium fashion accessories."
+  },
+  {
+    id: 55,
+    name: "Luxury Accessories 05",
+    category: "Accessories",
+    price: 749,
+    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
+    description: "Beautiful accessory collection."
+  },
+  {
+    id: 56,
+    name: "Luxury Accessories 06",
+    category: "Accessories",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
+    description: "Premium accessories for your style."
+  },
+  {
+    id: 57,
+    name: "Luxury Accessories 07",
+    category: "Accessories",
+    price: 649,
+    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
+    description: "Elegant fashion accessories."
+  },
+  {
+    id: 58,
+    name: "Luxury Accessories 08",
+    category: "Accessories",
+    price: 849,
+    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
+    description: "Premium accessories collection."
+  },
+  {
+    id: 59,
+    name: "Luxury Accessories 09",
+    category: "Accessories",
+    price: 699,
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
+    description: "Stylish accessories for everyday use."
+  },
+  {
+    id: 60,
+    name: "Luxury Accessories 10",
+    category: "Accessories",
+    price: 1099,
+    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
+    description: "Luxury accessories by HURAIN."
   }
+
 ];
 
 
@@ -72,33 +526,40 @@ const products = [
 // STORAGE
 // ======================================================
 
-function getStorage(key, fallback) {
+function loadStorage(key, fallback) {
   try {
-    const value = localStorage.getItem(key);
+    const data = localStorage.getItem(key);
 
-    if (!value) return fallback;
+    if (!data) {
+      return fallback;
+    }
 
-    const parsed = JSON.parse(value);
+    const parsed = JSON.parse(data);
 
     return parsed ?? fallback;
+
   } catch (error) {
     console.error("Storage error:", error);
     return fallback;
   }
 }
 
-function setStorage(key, value) {
+
+function saveStorage(key, value) {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
   } catch (error) {
     console.error("Storage save error:", error);
   }
 }
 
 
-let cart = getStorage("hurain_cart", []);
-let wishlist = getStorage("hurain_wishlist", []);
-let orders = getStorage("hurain_orders", []);
+let cart = loadStorage("hurain_cart", []);
+let wishlist = loadStorage("hurain_wishlist", []);
+let orders = loadStorage("hurain_orders", []);
 
 let activeCategory = "all";
 let searchText = "";
@@ -112,6 +573,7 @@ function money(value) {
   return Number(value || 0).toLocaleString("en-IN");
 }
 
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -121,6 +583,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+
 function stopEvent(event) {
   if (!event) return;
 
@@ -129,31 +592,91 @@ function stopEvent(event) {
 }
 
 
+function getCartQuantity() {
+  return cart.reduce(function(total, item) {
+    return total + Number(item.quantity || 0);
+  }, 0);
+}
+
+
+function getCartSubtotal() {
+  return cart.reduce(function(total, item) {
+    return total +
+      Number(item.price || 0) *
+      Number(item.quantity || 0);
+  }, 0);
+}
+
+
 // ======================================================
-// PRODUCT LIST
+// PRODUCT SHOP
 // ======================================================
+
+function showAllProducts() {
+  activeCategory = "all";
+  searchText = "";
+
+  const input = document.getElementById("search-input");
+
+  if (input) {
+    input.value = "";
+  }
+
+  loadProducts();
+
+  document.getElementById("products")?.scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+
+function filterProducts(category) {
+  activeCategory = category || "all";
+
+  loadProducts();
+
+  document.getElementById("products")?.scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+
+function searchProducts(value) {
+  searchText = String(value || "")
+    .trim()
+    .toLowerCase();
+
+  loadProducts();
+}
+
 
 function loadProducts() {
+
   const grid = document.getElementById("product-grid");
 
-  if (!grid) return;
+  if (!grid) {
+    return;
+  }
 
-  let visibleProducts = [...products];
+  let visible = [...products];
 
   if (activeCategory !== "all") {
-    visibleProducts = visibleProducts.filter(
-      product => product.category === activeCategory
-    );
+    visible = visible.filter(function(product) {
+      return product.category === activeCategory;
+    });
   }
 
   if (searchText) {
-    visibleProducts = visibleProducts.filter(product =>
-      product.name.toLowerCase().includes(searchText) ||
-      product.category.toLowerCase().includes(searchText)
-    );
+    visible = visible.filter(function(product) {
+      return (
+        product.name.toLowerCase().includes(searchText) ||
+        product.category.toLowerCase().includes(searchText)
+      );
+    });
   }
 
-  if (!visibleProducts.length) {
+  if (!visible.length) {
+
     grid.innerHTML = `
       <div class="empty-products">
         <div>✨</div>
@@ -161,20 +684,32 @@ function loadProducts() {
         <p>Please try another category or search.</p>
       </div>
     `;
+
     return;
   }
 
   grid.innerHTML = "";
 
-  visibleProducts.forEach(product => {
-    const cartItem = cart.find(item => item.id === product.id);
-    const quantity = cartItem ? cartItem.quantity : 0;
-    const favourite = wishlist.includes(product.id);
+  visible.forEach(function(product) {
+
+    const cartItem = cart.find(function(item) {
+      return Number(item.id) === Number(product.id);
+    });
+
+    const quantity = cartItem
+      ? Number(cartItem.quantity)
+      : 0;
+
+    const favourite = wishlist.some(function(id) {
+      return Number(id) === Number(product.id);
+    });
 
     const card = document.createElement("div");
+
     card.className = "product-card";
 
     card.innerHTML = `
+
       <div
         class="product-image-wrapper"
         style="position:relative; cursor:pointer;"
@@ -182,7 +717,7 @@ function loadProducts() {
       >
 
         <img
-          src="${product.image}"
+          src="${escapeHtml(product.image)}"
           alt="${escapeHtml(product.name)}"
           loading="lazy"
         >
@@ -191,7 +726,7 @@ function loadProducts() {
           type="button"
           class="wishlist-button"
           onclick="toggleWishlist(event, ${product.id})"
-          aria-label="Favourite"
+          aria-label="Favourite product"
           style="
             position:absolute;
             top:10px;
@@ -208,18 +743,20 @@ function loadProducts() {
         >
           ${favourite ? "❤️" : "♡"}
         </button>
+
       </div>
 
-      <div class="product-info">
+      <div
+        class="product-info"
+        style="cursor:pointer;"
+        onclick="openProductDetails(event, ${product.id})"
+      >
 
         <div class="product-category">
           ${escapeHtml(product.category)}
         </div>
 
-        <h3
-          onclick="openProductDetails(event, ${product.id})"
-          style="cursor:pointer;"
-        >
+        <h3>
           ${escapeHtml(product.name)}
         </h3>
 
@@ -227,218 +764,195 @@ function loadProducts() {
           ₹${money(product.price)}
         </div>
 
-        <div
-          class="product-cart-control"
-          style="margin-top:12px;width:100%;"
-        >
+      </div>
 
-          ${
-            quantity === 0
-              ? `
-                <button
-                  type="button"
-                  class="add-cart"
-                  onclick="addToCart(event, ${product.id})"
-                >
-                  ADD TO CART
-                </button>
-              `
-              : `
-                <div
-                  class="quantity-control"
-                  style="
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    gap:20px;
-                    width:100%;
-                  "
-                >
+      <div
+        class="product-cart-control"
+        style="
+          margin-top:12px;
+          width:100%;
+          position:relative;
+          z-index:10;
+        "
+      >
 
-                  <button
-                    type="button"
-                    onclick="decreaseQuantity(event, ${product.id})"
-                  >
-                    −
-                  </button>
+        ${
+          quantity === 0
 
-                  <strong>${quantity}</strong>
+          ?
 
-                  <button
-                    type="button"
-                    onclick="increaseQuantity(event, ${product.id})"
-                  >
-                    +
-                  </button>
+          `
+            <button
+              type="button"
+              class="add-cart"
+              onclick="addToCart(event, ${product.id})"
+            >
+              ADD TO CART
+            </button>
+          `
 
-                </div>
-              `
-          }
+          :
 
-        </div>
+          `
+            <div
+              class="quantity-control"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                gap:20px;
+                width:100%;
+                box-sizing:border-box;
+              "
+            >
+
+              <button
+                type="button"
+                onclick="decreaseQuantity(event, ${product.id})"
+              >
+                −
+              </button>
+
+              <strong>
+                ${quantity}
+              </strong>
+
+              <button
+                type="button"
+                onclick="increaseQuantity(event, ${product.id})"
+              >
+                +
+              </button>
+
+            </div>
+          `
+        }
 
       </div>
     `;
 
     grid.appendChild(card);
+
   });
-}
-
-
-// ======================================================
-// CATEGORY / SEARCH
-// ======================================================
-
-function filterProducts(category) {
-  activeCategory = category || "all";
-  searchText = "";
-
-  loadProducts();
-
-  document.getElementById("products")?.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-function showAllProducts() {
-  activeCategory = "all";
-  searchText = "";
-  loadProducts();
-
-  document.getElementById("products")?.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-function searchProducts(value) {
-  searchText = String(value || "").trim().toLowerCase();
-
-  const grid = document.getElementById("search-results");
-
-  loadProducts();
-
-  if (grid) {
-    const results = products.filter(product =>
-      product.name.toLowerCase().includes(searchText) ||
-      product.category.toLowerCase().includes(searchText)
-    );
-
-    if (!searchText) {
-      grid.innerHTML = "";
-      return;
-    }
-
-    grid.innerHTML = results.length
-      ? results.map(product => `
-          <button
-            type="button"
-            onclick="openProductDetails(event, ${product.id}); closeSearch();"
-            style="
-              display:block;
-              width:100%;
-              padding:12px;
-              margin:8px 0;
-              text-align:left;
-              cursor:pointer;
-            "
-          >
-            ${escapeHtml(product.name)}
-            — ₹${money(product.price)}
-          </button>
-        `).join("")
-      : `<p>No products found.</p>`;
-  }
 }
 
 
 // ======================================================
 // PRODUCT DETAILS
+// THIS FIXES THE PRODUCT CLICK / HANG PROBLEM
 // ======================================================
 
 function openProductDetails(event, productId) {
+
   stopEvent(event);
 
-  const product = products.find(item => item.id === productId);
+  const product = products.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
 
-  if (!product) return;
+  if (!product) {
+    console.error("Product not found:", productId);
+    return;
+  }
 
   const modal = document.getElementById("product-modal");
   const content = document.getElementById("product-detail-content");
 
-  if (!modal || !content) return;
+  if (!modal || !content) {
+    console.error("Product details modal missing.");
+    return;
+  }
 
-  const cartItem = cart.find(item => item.id === productId);
-  const quantity = cartItem ? cartItem.quantity : 0;
-  const favourite = wishlist.includes(productId);
+  const cartItem = cart.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
+
+  const quantity = cartItem
+    ? Number(cartItem.quantity)
+    : 0;
+
+  const favourite = wishlist.some(function(id) {
+    return Number(id) === Number(productId);
+  });
 
   content.innerHTML = `
-    <div
-      class="product-detail"
-      style="
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:25px;
-      "
-    >
 
-      <div>
+    <div class="product-detail">
+
+      <div class="product-detail-image">
+
         <img
-          src="${product.image}"
+          src="${escapeHtml(product.image)}"
           alt="${escapeHtml(product.name)}"
           style="
             width:100%;
-            max-height:500px;
+            max-width:500px;
+            height:auto;
             object-fit:cover;
             border-radius:12px;
           "
         >
+
       </div>
 
-      <div>
 
-        <small>
+      <div class="product-detail-info">
+
+        <div class="product-category">
           ${escapeHtml(product.category)}
-        </small>
+        </div>
 
         <h2>
           ${escapeHtml(product.name)}
         </h2>
 
-        <h3>
+        <div class="product-price">
           ₹${money(product.price)}
-        </h3>
+        </div>
 
         <p>
-          ${escapeHtml(product.description)}
+          ${escapeHtml(
+            product.description ||
+            "Premium quality product from HURAIN."
+          )}
         </p>
+
 
         <button
           type="button"
           onclick="toggleWishlist(event, ${product.id})"
-          style="
-            padding:10px 15px;
-            cursor:pointer;
-          "
         >
-          ${favourite ? "❤️ Favourite" : "♡ Add to Favourite"}
+          ${favourite ? "❤️ FAVOURITED" : "♡ ADD TO FAVOURITES"}
         </button>
 
-        <div style="margin-top:20px;">
 
-          <strong>Quantity</strong>
+        <div
+          class="product-detail-quantity"
+          style="
+            margin-top:20px;
+          "
+        >
+
+          <span>
+            Quantity
+          </span>
 
           <div
+            class="quantity-control"
             style="
               display:flex;
               align-items:center;
-              gap:18px;
-              margin:12px 0;
+              gap:20px;
+              margin-top:10px;
             "
           >
 
             <button
               type="button"
-              onclick="decreaseQuantity(event, ${product.id}); openProductDetails(event, ${product.id})"
+              onclick="
+                decreaseQuantity(event, ${product.id});
+                refreshProductDetails(${product.id});
+              "
             >
               −
             </button>
@@ -449,7 +963,10 @@ function openProductDetails(event, productId) {
 
             <button
               type="button"
-              onclick="increaseQuantity(event, ${product.id}); openProductDetails(event, ${product.id})"
+              onclick="
+                increaseQuantity(event, ${product.id});
+                refreshProductDetails(${product.id});
+              "
             >
               +
             </button>
@@ -458,10 +975,13 @@ function openProductDetails(event, productId) {
 
         </div>
 
+
         <div
+          class="product-detail-buttons"
           style="
             display:flex;
             gap:10px;
+            margin-top:20px;
             flex-wrap:wrap;
           "
         >
@@ -469,10 +989,14 @@ function openProductDetails(event, productId) {
           <button
             type="button"
             class="add-cart"
-            onclick="addToCart(event, ${product.id}); openProductDetails(event, ${product.id})"
+            onclick="
+              addToCart(event, ${product.id});
+              refreshProductDetails(${product.id});
+            "
           >
             ADD TO CART
           </button>
+
 
           <button
             type="button"
@@ -487,21 +1011,39 @@ function openProductDetails(event, productId) {
       </div>
 
     </div>
+
   `;
 
   modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
   document.body.style.overflow = "hidden";
 }
 
+
+function refreshProductDetails(productId) {
+  openProductDetails(null, productId);
+}
+
+
 function closeProductDetails() {
+
   const modal = document.getElementById("product-modal");
 
-  if (!modal) return;
+  if (!modal) {
+    return;
+  }
 
   modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
   document.body.style.overflow = "";
 }
@@ -512,13 +1054,21 @@ function closeProductDetails() {
 // ======================================================
 
 function orderNow(productId) {
-  const product = products.find(item => item.id === productId);
 
-  if (!product) return;
+  const product = products.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
 
-  const existing = cart.find(item => item.id === productId);
+  if (!product) {
+    return;
+  }
+
+  const existing = cart.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
 
   if (!existing) {
+
     cart.push({
       id: product.id,
       name: product.name,
@@ -528,15 +1078,15 @@ function orderNow(productId) {
       quantity: 1
     });
 
-    setStorage("hurain_cart", cart);
   }
 
+  saveStorage("hurain_cart", cart);
+
   updateCart();
-  loadProducts();
 
   closeProductDetails();
 
-  goToCheckout();
+  openCheckout();
 }
 
 
@@ -545,17 +1095,27 @@ function orderNow(productId) {
 // ======================================================
 
 function addToCart(event, productId) {
+
   stopEvent(event);
 
-  const product = products.find(item => item.id === productId);
+  const product = products.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
 
-  if (!product) return;
+  if (!product) {
+    return;
+  }
 
-  const existing = cart.find(item => item.id === productId);
+  const existing = cart.find(function(item) {
+    return Number(item.id) === Number(productId);
+  });
 
   if (existing) {
+
     existing.quantity += 1;
+
   } else {
+
     cart.push({
       id: product.id,
       name: product.name,
@@ -564,18 +1124,24 @@ function addToCart(event, productId) {
       image: product.image,
       quantity: 1
     });
+
   }
 
-  setStorage("hurain_cart", cart);
+  saveStorage("hurain_cart", cart);
 
   updateCart();
+
   loadProducts();
 }
 
+
 function increaseQuantity(event, productId) {
+
   stopEvent(event);
 
-  const item = cart.find(item => item.id === productId);
+  const item = cart.find(function(product) {
+    return Number(product.id) === Number(productId);
+  });
 
   if (!item) {
     addToCart(null, productId);
@@ -584,63 +1150,62 @@ function increaseQuantity(event, productId) {
 
   item.quantity += 1;
 
-  setStorage("hurain_cart", cart);
+  saveStorage("hurain_cart", cart);
 
   updateCart();
+
   loadProducts();
 }
+
 
 function decreaseQuantity(event, productId) {
+
   stopEvent(event);
 
-  const item = cart.find(item => item.id === productId);
+  const item = cart.find(function(product) {
+    return Number(product.id) === Number(productId);
+  });
 
-  if (!item) return;
-
-  if (item.quantity > 1) {
-    item.quantity -= 1;
-  } else {
-    cart = cart.filter(item => item.id !== productId);
+  if (!item) {
+    return;
   }
 
-  setStorage("hurain_cart", cart);
+  item.quantity -= 1;
+
+  if (item.quantity <= 0) {
+
+    cart = cart.filter(function(product) {
+      return Number(product.id) !== Number(productId);
+    });
+
+  }
+
+  saveStorage("hurain_cart", cart);
 
   updateCart();
+
   loadProducts();
 }
+
 
 function removeFromCart(event, productId) {
+
   stopEvent(event);
 
-  cart = cart.filter(item => item.id !== productId);
+  cart = cart.filter(function(item) {
+    return Number(item.id) !== Number(productId);
+  });
 
-  setStorage("hurain_cart", cart);
+  saveStorage("hurain_cart", cart);
 
   updateCart();
+
   loadProducts();
-
-  // IMPORTANT:
-  // Cart stays open. No page redirect.
 }
 
-function getCartQuantity() {
-  return cart.reduce(
-    (total, item) => total + Number(item.quantity || 0),
-    0
-  );
-}
-
-function getCartSubtotal() {
-  return cart.reduce(
-    (total, item) =>
-      total +
-      Number(item.price || 0) *
-      Number(item.quantity || 0),
-    0
-  );
-}
 
 function updateCart() {
+
   const count = document.getElementById("cart-count");
   const total = document.getElementById("cart-total");
   const items = document.getElementById("cart-items");
@@ -653,75 +1218,66 @@ function updateCart() {
     total.textContent = money(getCartSubtotal());
   }
 
-  if (!items) return;
+  if (!items) {
+    return;
+  }
 
   if (!cart.length) {
+
     items.innerHTML = `
       <div class="empty-cart">
         <p>Your cart is empty.</p>
       </div>
     `;
+
     return;
   }
 
-  items.innerHTML = cart.map(item => `
-    <div
-      class="cart-item"
-      style="
-        display:grid;
-        grid-template-columns:70px 1fr auto;
-        gap:12px;
-        align-items:center;
-      "
-    >
+  items.innerHTML = "";
 
-      <img
-        src="${item.image}"
-        alt="${escapeHtml(item.name)}"
-        style="
-          width:65px;
-          height:65px;
-          object-fit:cover;
-          border-radius:8px;
-        "
-      >
+  cart.forEach(function(item) {
 
-      <div>
+    const row = document.createElement("div");
+
+    row.className = "cart-item";
+
+    row.innerHTML = `
+
+      <div class="cart-item-info">
+
         <strong>
           ${escapeHtml(item.name)}
         </strong>
 
-        <div>
+        <small>
           ₹${money(item.price)}
-        </div>
+        </small>
 
-        <div
-          style="
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-top:7px;
-          "
-        >
-
-          <button
-            type="button"
-            onclick="decreaseQuantity(event, ${item.id})"
-          >
-            −
-          </button>
-
-          <strong>${item.quantity}</strong>
-
-          <button
-            type="button"
-            onclick="increaseQuantity(event, ${item.id})"
-          >
-            +
-          </button>
-
-        </div>
       </div>
+
+
+      <div class="cart-item-actions">
+
+        <button
+          type="button"
+          onclick="decreaseQuantity(event, ${item.id})"
+        >
+          −
+        </button>
+
+        <span>
+          ${item.quantity}
+        </span>
+
+        <button
+          type="button"
+          onclick="increaseQuantity(event, ${item.id})"
+        >
+          +
+        </button>
+
+      </div>
+
 
       <button
         type="button"
@@ -730,152 +1286,55 @@ function updateCart() {
         Remove
       </button>
 
-    </div>
-  `).join("");
+    `;
+
+    items.appendChild(row);
+
+  });
 }
 
+
+// ======================================================
+// CART OPEN / CLOSE
+// ======================================================
+
 function openCart() {
+
   updateCart();
 
   const overlay = document.getElementById("cart-overlay");
 
-  if (!overlay) return;
-
-  overlay.classList.add("active");
-  overlay.setAttribute("aria-hidden", "false");
-
-  document.body.style.overflow = "hidden";
-}
-
-function closeCart() {
-  const overlay = document.getElementById("cart-overlay");
-
-  if (!overlay) return;
-
-  overlay.classList.remove("active");
-  overlay.setAttribute("aria-hidden", "true");
-
-  document.body.style.overflow = "";
-}
-
-
-// ======================================================
-// WISHLIST
-// ======================================================
-
-function toggleWishlist(event, productId) {
-  stopEvent(event);
-
-  const index = wishlist.indexOf(productId);
-
-  if (index === -1) {
-    wishlist.push(productId);
-  } else {
-    wishlist.splice(index, 1);
-  }
-
-  setStorage("hurain_wishlist", wishlist);
-
-  loadProducts();
-
-  const modal = document.getElementById("wishlist-modal");
-
-  if (modal && modal.classList.contains("active")) {
-    renderWishlist();
-  }
-}
-
-function openWishlist() {
-  renderWishlist();
-
-  const modal = document.getElementById("wishlist-modal");
-
-  if (!modal) return;
-
-  modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
-
-  document.body.style.overflow = "hidden";
-}
-
-function closeWishlist() {
-  const modal = document.getElementById("wishlist-modal");
-
-  if (!modal) return;
-
-  modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
-
-  document.body.style.overflow = "";
-}
-
-function renderWishlist() {
-  const container = document.getElementById("wishlist-items");
-
-  if (!container) return;
-
-  const favourites = products.filter(product =>
-    wishlist.includes(product.id)
-  );
-
-  if (!favourites.length) {
-    container.innerHTML = `
-      <p>
-        Your favourite products will appear here.
-      </p>
-    `;
+  if (!overlay) {
     return;
   }
 
-  container.innerHTML = favourites.map(product => `
-    <div
-      style="
-        display:flex;
-        align-items:center;
-        gap:12px;
-        margin:12px 0;
-      "
-    >
+  overlay.classList.add("active");
 
-      <img
-        src="${product.image}"
-        alt="${escapeHtml(product.name)}"
-        style="
-          width:65px;
-          height:65px;
-          object-fit:cover;
-          border-radius:8px;
-        "
-      >
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
-      <div style="flex:1;">
-        <strong>
-          ${escapeHtml(product.name)}
-        </strong>
-
-        <div>
-          ₹${money(product.price)}
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onclick="removeFavourite(${product.id})"
-      >
-        Remove
-      </button>
-
-    </div>
-  `).join("");
+  document.body.style.overflow = "hidden";
 }
 
-function removeFavourite(productId) {
-  wishlist = wishlist.filter(id => id !== productId);
 
-  setStorage("hurain_wishlist", wishlist);
+function closeCart() {
 
-  loadProducts();
-  renderWishlist();
+  const overlay = document.getElementById("cart-overlay");
+
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.remove("active");
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
 }
 
 
@@ -884,36 +1343,50 @@ function removeFavourite(productId) {
 // ======================================================
 
 function goToCheckout() {
+
   if (!cart.length) {
-    alert("Your cart is empty. Please add a product first.");
+
+    alert(
+      "Your cart is empty. Please add a product first."
+    );
+
     return;
   }
 
   closeCart();
-  closeProductDetails();
 
   const checkout = document.getElementById("checkout-page");
 
-  if (!checkout) return;
-
-  checkout.style.display = "block";
+  if (!checkout) {
+    return;
+  }
 
   renderCheckout();
 
-  setTimeout(() => {
-    checkout.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, 100);
+  checkout.style.display = "block";
+
+  checkout.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 
   document.body.style.overflow = "";
 }
 
+
+function openCheckout() {
+
+  goToCheckout();
+}
+
+
 function closeCheckout() {
+
   const checkout = document.getElementById("checkout-page");
 
-  if (!checkout) return;
+  if (!checkout) {
+    return;
+  }
 
   checkout.style.display = "none";
 
@@ -921,65 +1394,81 @@ function closeCheckout() {
     top: 0,
     behavior: "smooth"
   });
+
+  document.body.style.overflow = "";
 }
+
 
 function renderCheckout() {
-  const items = document.getElementById("checkout-items");
-  const subtotalElement =
+
+  const itemsContainer =
+    document.getElementById("checkout-items");
+
+  const productTotal =
     document.getElementById("checkout-product-total");
-  const deliveryElement =
+
+  const delivery =
     document.getElementById("checkout-delivery");
-  const totalElement =
+
+  const grandTotal =
     document.getElementById("checkout-grand-total");
 
+  if (itemsContainer) {
+
+    itemsContainer.innerHTML =
+      cart.map(function(item) {
+
+        return `
+          <div class="summary-row">
+
+            <span>
+              ${escapeHtml(item.name)}
+              × ${item.quantity}
+            </span>
+
+            <strong>
+              ₹${money(
+                Number(item.price) *
+                Number(item.quantity)
+              )}
+            </strong>
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
   const subtotal = getCartSubtotal();
-  const delivery = cart.length ? DELIVERY_CHARGE : 0;
-  const grandTotal = subtotal + delivery;
+  const deliveryCharge = cart.length
+    ? DELIVERY_CHARGE
+    : 0;
 
-  if (items) {
-    items.innerHTML = cart.map(item => `
-      <div
-        class="summary-item"
-        style="
-          display:flex;
-          justify-content:space-between;
-          gap:15px;
-          padding:10px 0;
-        "
-      >
+  const total =
+    subtotal +
+    deliveryCharge;
 
-        <span>
-          ${escapeHtml(item.name)}
-          × ${item.quantity}
-        </span>
-
-        <strong>
-          ₹${money(item.price * item.quantity)}
-        </strong>
-
-      </div>
-    `).join("");
+  if (productTotal) {
+    productTotal.textContent = money(subtotal);
   }
 
-  if (subtotalElement) {
-    subtotalElement.textContent = money(subtotal);
+  if (delivery) {
+    delivery.textContent = money(deliveryCharge);
   }
 
-  if (deliveryElement) {
-    deliveryElement.textContent = money(delivery);
-  }
-
-  if (totalElement) {
-    totalElement.textContent = money(grandTotal);
+  if (grandTotal) {
+    grandTotal.textContent = money(total);
   }
 }
 
 
 // ======================================================
-// FORM ERRORS
+// CHECKOUT SUBMIT
 // ======================================================
 
-function clearFormErrors() {
+function clearCheckoutErrors() {
+
   const ids = [
     "customer-name-error",
     "customer-mobile-error",
@@ -990,17 +1479,23 @@ function clearFormErrors() {
     "customer-pincode-error"
   ];
 
-  ids.forEach(id => {
-    const element = document.getElementById(id);
+  ids.forEach(function(id) {
+
+    const element =
+      document.getElementById(id);
 
     if (element) {
       element.textContent = "";
     }
+
   });
 }
 
-function showFormError(id, message) {
-  const element = document.getElementById(id);
+
+function setCheckoutError(id, message) {
+
+  const element =
+    document.getElementById(id);
 
   if (element) {
     element.textContent = message;
@@ -1008,17 +1503,16 @@ function showFormError(id, message) {
 }
 
 
-// ======================================================
-// WHATSAPP ORDER
-// ======================================================
+function submitCheckout(event) {
 
-function handleCheckoutSubmit(event) {
   stopEvent(event);
 
-  clearFormErrors();
+  clearCheckoutErrors();
 
   if (!cart.length) {
+
     alert("Your cart is empty.");
+
     return;
   }
 
@@ -1026,94 +1520,114 @@ function handleCheckoutSubmit(event) {
     document.getElementById("customer-name")?.value.trim() || "";
 
   const mobile =
-    document.getElementById("customer-mobile")
-      ?.value.replace(/\D/g, "") || "";
+    document.getElementById("customer-mobile")?.value
+      .replace(/\D/g, "") || "";
 
   const address =
-    document.getElementById("customer-address")
-      ?.value.trim() || "";
+    document.getElementById("customer-address")?.value.trim() || "";
 
   const area =
-    document.getElementById("customer-area")
-      ?.value.trim() || "";
+    document.getElementById("customer-area")?.value.trim() || "";
 
   const city =
-    document.getElementById("customer-city")
-      ?.value.trim() || "";
+    document.getElementById("customer-city")?.value.trim() || "";
 
   const state =
-    document.getElementById("customer-state")
-      ?.value.trim() || "";
+    document.getElementById("customer-state")?.value || "";
 
   const pincode =
-    document.getElementById("customer-pincode")
-      ?.value.replace(/\D/g, "") || "";
+    document.getElementById("customer-pincode")?.value
+      .replace(/\D/g, "") || "";
 
   const note =
-    document.getElementById("delivery-note")
-      ?.value.trim() || "";
+    document.getElementById("delivery-note")?.value.trim() || "";
 
   let valid = true;
 
+
   if (name.length < 2) {
-    showFormError(
+
+    setCheckoutError(
       "customer-name-error",
       "Please enter your full name."
     );
+
     valid = false;
   }
 
+
   if (!/^[6-9]\d{9}$/.test(mobile)) {
-    showFormError(
+
+    setCheckoutError(
       "customer-mobile-error",
       "Please enter a valid 10-digit mobile number."
     );
+
     valid = false;
   }
 
-  if (address.length < 3) {
-    showFormError(
+
+  if (address.length < 2) {
+
+    setCheckoutError(
       "customer-address-error",
-      "Please enter your house or flat number."
+      "Please enter your house / flat number."
     );
+
     valid = false;
   }
 
-  if (area.length < 3) {
-    showFormError(
+
+  if (area.length < 2) {
+
+    setCheckoutError(
       "customer-area-error",
-      "Please enter your area or street."
+      "Please enter your area / street."
     );
+
     valid = false;
   }
+
 
   if (city.length < 2) {
-    showFormError(
+
+    setCheckoutError(
       "customer-city-error",
       "Please enter your city."
     );
+
     valid = false;
   }
 
+
   if (!state) {
-    showFormError(
+
+    setCheckoutError(
       "customer-state-error",
       "Please select your state."
     );
+
     valid = false;
   }
 
+
   if (!/^\d{6}$/.test(pincode)) {
-    showFormError(
+
+    setCheckoutError(
       "customer-pincode-error",
       "Please enter a valid 6-digit pincode."
     );
+
     valid = false;
   }
 
-  if (!valid) return;
 
-  placeWhatsAppOrder({
+  if (!valid) {
+    return;
+  }
+
+
+  createWhatsAppOrder({
     name,
     mobile,
     address,
@@ -1127,149 +1641,534 @@ function handleCheckoutSubmit(event) {
 
 
 // ======================================================
-// PLACE ORDER
+// WHATSAPP ORDER
 // ======================================================
 
-function placeWhatsAppOrder(customer) {
-  const orderId =
-    "HURAIN-" +
-    Date.now().toString().slice(-8);
+function createWhatsAppOrder(customer) {
 
   const subtotal = getCartSubtotal();
+
   const delivery = DELIVERY_CHARGE;
+
   const total = subtotal + delivery;
 
+  const orderId = generateOrderId();
+
   const order = {
+
     id: orderId,
+
     date: new Date().toISOString(),
+
     status: "Order Placed",
-    customer,
-    items: cart.map(item => ({ ...item })),
-    subtotal,
-    delivery,
-    total
+
+    customer: customer,
+
+    items: cart.map(function(item) {
+      return {
+        ...item
+      };
+    }),
+
+    subtotal: subtotal,
+
+    delivery: delivery,
+
+    total: total
+
   };
+
 
   orders.unshift(order);
 
-  setStorage("hurain_orders", orders);
+  saveStorage(
+    "hurain_orders",
+    orders
+  );
 
-  let message = "";
 
-  message += "🛍️ *HURAIN NEW ORDER*\n";
-  message += "━━━━━━━━━━━━━━━━━━\n\n";
+  let message =
+    "🛍️ *HURAIN NEW ORDER*\n\n";
 
-  message += "🧾 *ORDER ID:* " + orderId + "\n\n";
 
-  message += "👤 *CUSTOMER DETAILS*\n";
-  message += "Name: " + customer.name + "\n";
-  message += "Mobile: " + customer.mobile + "\n\n";
+  message +=
+    "Order ID: " +
+    orderId +
+    "\n\n";
 
-  message += "📍 *DELIVERY ADDRESS*\n";
-  message += customer.address + "\n";
-  message += customer.area + "\n";
-  message += customer.city + ", " + customer.state + "\n";
-  message += "Pincode: " + customer.pincode + "\n";
+
+  message +=
+    "👤 *CUSTOMER DETAILS*\n";
+
+  message +=
+    "Name: " +
+    customer.name +
+    "\n";
+
+  message +=
+    "Mobile: " +
+    customer.mobile +
+    "\n\n";
+
+
+  message +=
+    "📍 *DELIVERY ADDRESS*\n";
+
+  message +=
+    customer.address +
+    "\n";
+
+  message +=
+    "Area: " +
+    customer.area +
+    "\n";
+
+  message +=
+    "City: " +
+    customer.city +
+    "\n";
+
+  message +=
+    "State: " +
+    customer.state +
+    "\n";
+
+  message +=
+    "Pincode: " +
+    customer.pincode +
+    "\n";
+
 
   if (customer.note) {
-    message += "Note: " + customer.note + "\n";
+
+    message +=
+      "Delivery Note: " +
+      customer.note +
+      "\n";
+
   }
 
-  message += "\n";
-  message += "🛒 *PRODUCT DETAILS*\n";
-  message += "━━━━━━━━━━━━━━━━━━\n";
 
-  cart.forEach((item, index) => {
-    message += "\n";
-    message += (index + 1) + ". " + item.name + "\n";
-    message += "Category: " + item.category + "\n";
-    message += "Quantity: " + item.quantity + "\n";
-    message += "Price: ₹" + money(item.price) + "\n";
+  message +=
+    "\n🛒 *ORDER DETAILS*\n\n";
+
+
+  cart.forEach(function(item, index) {
+
+    message +=
+      (index + 1) +
+      ". " +
+      item.name +
+      "\n";
+
+    message +=
+      "Category: " +
+      item.category +
+      "\n";
+
+    message +=
+      "Quantity: " +
+      item.quantity +
+      "\n";
+
+    message +=
+      "Price: ₹" +
+      money(item.price) +
+      "\n";
+
     message +=
       "Product Total: ₹" +
-      money(item.price * item.quantity) +
+      money(
+        Number(item.price) *
+        Number(item.quantity)
+      ) +
       "\n";
 
     message +=
       "Product Link: " +
-      window.location.origin +
-      window.location.pathname +
-      "#product-" +
-      item.id +
-      "\n";
+      getProductLink(item.id) +
+      "\n\n";
+
   });
 
-  message += "\n";
-  message += "━━━━━━━━━━━━━━━━━━\n";
-  message += "Product Total: ₹" + money(subtotal) + "\n";
-  message += "Delivery: ₹" + money(delivery) + "\n";
-  message += "💰 *GRAND TOTAL: ₹" + money(total) + "*\n\n";
-  message += "Thank you for shopping with HURAIN ❤️";
 
-  const url =
+  message +=
+    "Product Total: ₹" +
+    money(subtotal) +
+    "\n";
+
+  message +=
+    "Delivery: ₹" +
+    money(delivery) +
+    "\n";
+
+  message +=
+    "Grand Total: ₹" +
+    money(total) +
+    "\n\n";
+
+  message +=
+    "Thank you for shopping with HURAIN ❤️";
+
+
+  const whatsappURL =
     "https://wa.me/" +
     WHATSAPP_NUMBER +
     "?text=" +
     encodeURIComponent(message);
 
-  window.open(url, "_blank");
 
-  // Save order first, then clear cart
+  window.open(
+    whatsappURL,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+
   cart = [];
 
-  setStorage("hurain_cart", cart);
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
 
   updateCart();
+
   loadProducts();
 
   closeCheckout();
 
-  alert(
-    "Order " +
-    orderId +
-    " is ready on WhatsApp."
+
+  setTimeout(function() {
+
+    alert(
+      "Order details are ready on WhatsApp.\n\nOrder ID: " +
+      orderId
+    );
+
+  }, 300);
+}
+
+
+// ======================================================
+// PRODUCT LINK
+// ======================================================
+
+function getProductLink(productId) {
+
+  return (
+    window.location.origin +
+    window.location.pathname +
+    "#product-" +
+    productId
   );
 }
 
 
 // ======================================================
-// ACCOUNT
+// ORDER ID
 // ======================================================
 
-function openAccount() {
-  const modal = document.getElementById("account-modal");
+function generateOrderId() {
 
-  if (!modal) return;
+  const random =
+    Math.floor(
+      1000 +
+      Math.random() * 9000
+    );
+
+  return (
+    "HURAIN-" +
+    Date.now()
+      .toString()
+      .slice(-6) +
+    "-" +
+    random
+  );
+}
+
+
+// ======================================================
+// WISHLIST
+// ======================================================
+
+function toggleWishlist(event, productId) {
+
+  stopEvent(event);
+
+  const index =
+    wishlist.findIndex(function(id) {
+      return Number(id) === Number(productId);
+    });
+
+
+  if (index === -1) {
+
+    wishlist.push(productId);
+
+  } else {
+
+    wishlist.splice(index, 1);
+
+  }
+
+
+  saveStorage(
+    "hurain_wishlist",
+    wishlist
+  );
+
+
+  loadProducts();
+
+
+  const modal =
+    document.getElementById("product-modal");
+
+  if (
+    modal &&
+    modal.classList.contains("active")
+  ) {
+
+    openProductDetails(
+      null,
+      productId
+    );
+
+  }
+}
+
+
+function openWishlist() {
+
+  const modal =
+    document.getElementById("wishlist-modal");
+
+  const container =
+    document.getElementById("wishlist-items");
+
+  if (!modal || !container) {
+    return;
+  }
+
+
+  const favouriteProducts =
+    products.filter(function(product) {
+
+      return wishlist.some(function(id) {
+        return Number(id) === Number(product.id);
+      });
+
+    });
+
+
+  if (!favouriteProducts.length) {
+
+    container.innerHTML = `
+      <p>Your favourite products will appear here.</p>
+    `;
+
+  } else {
+
+    container.innerHTML =
+      favouriteProducts.map(function(product) {
+
+        return `
+
+          <div
+            class="wishlist-item"
+            style="
+              display:flex;
+              gap:12px;
+              align-items:center;
+              margin-bottom:15px;
+            "
+          >
+
+            <img
+              src="${escapeHtml(product.image)}"
+              alt="${escapeHtml(product.name)}"
+              style="
+                width:70px;
+                height:70px;
+                object-fit:cover;
+                border-radius:8px;
+              "
+            >
+
+            <div>
+
+              <strong>
+                ${escapeHtml(product.name)}
+              </strong>
+
+              <div>
+                ₹${money(product.price)}
+              </div>
+
+            </div>
+
+            <button
+              type="button"
+              onclick="openProductDetails(event, ${product.id})"
+            >
+              VIEW
+            </button>
+
+          </div>
+
+        `;
+
+      }).join("");
+  }
+
 
   modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
   document.body.style.overflow = "hidden";
 }
 
-function closeAccount() {
-  const modal = document.getElementById("account-modal");
 
-  if (!modal) return;
+function closeWishlist() {
+
+  const modal =
+    document.getElementById("wishlist-modal");
+
+  if (!modal) {
+    return;
+  }
 
   modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
   document.body.style.overflow = "";
 }
 
-function mobileLogin() {
-  const input = document.getElementById("login-mobile");
 
-  if (!input) return;
+// ======================================================
+// SEARCH
+// ======================================================
+
+function openSearch() {
+
+  const modal =
+    document.getElementById("search-modal");
+
+  const input =
+    document.getElementById("search-input");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow = "hidden";
+
+  setTimeout(function() {
+
+    input?.focus();
+
+  }, 100);
+}
+
+
+function closeSearch() {
+
+  const modal =
+    document.getElementById("search-modal");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.remove("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
+}
+
+
+// ======================================================
+// ACCOUNT / MOBILE LOGIN
+// ======================================================
+
+function openAccount() {
+
+  const modal =
+    document.getElementById("account-modal");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow = "hidden";
+}
+
+
+function closeAccount() {
+
+  const modal =
+    document.getElementById("account-modal");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.remove("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
+}
+
+
+function mobileLogin() {
+
+  const input =
+    document.getElementById("login-mobile");
+
+  if (!input) {
+    return;
+  }
 
   const mobile =
     input.value.replace(/\D/g, "");
 
   if (!/^[6-9]\d{9}$/.test(mobile)) {
+
     alert(
       "Please enter a valid 10-digit mobile number."
     );
+
     return;
   }
 
@@ -1279,152 +2178,207 @@ function mobileLogin() {
   );
 
   alert(
-    "Mobile number saved. OTP login can be connected later."
+    "Mobile number saved successfully."
+  );
+}
+
+
+// ======================================================
+// ORDERS
+// ======================================================
+
+function showOrders() {
+
+  const ordersList =
+    document.getElementById("orders-list");
+
+  const overlay =
+    document.getElementById("orders-overlay");
+
+  if (!ordersList || !overlay) {
+    return;
+  }
+
+
+  if (!orders.length) {
+
+    ordersList.innerHTML = `
+      <p>No orders found.</p>
+    `;
+
+  } else {
+
+    ordersList.innerHTML =
+      orders.map(function(order) {
+
+        return `
+
+          <div class="order-card">
+
+            <h3>
+              ${escapeHtml(order.id)}
+            </h3>
+
+            <p>
+              ${new Date(order.date)
+                .toLocaleString("en-IN")}
+            </p>
+
+            <strong>
+              Status:
+              ${escapeHtml(order.status)}
+            </strong>
+
+            <p>
+              Total:
+              ₹${money(order.total)}
+            </p>
+
+          </div>
+
+        `;
+
+      }).join("");
+  }
+
+
+  overlay.classList.add("active");
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
   );
 
-  closeAccount();
-}
-
-
-// ======================================================
-// SEARCH MODAL
-// ======================================================
-
-function openSearch() {
-  const modal = document.getElementById("search-modal");
-
-  if (!modal) return;
-
-  modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
-
   document.body.style.overflow = "hidden";
-
-  setTimeout(() => {
-    document.getElementById("search-input")?.focus();
-  }, 100);
 }
 
-function closeSearch() {
-  const modal = document.getElementById("search-modal");
 
-  if (!modal) return;
+function closeOrders() {
 
-  modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
+  const overlay =
+    document.getElementById("orders-overlay");
+
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.remove("active");
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
   document.body.style.overflow = "";
 }
 
 
 // ======================================================
-// BACKDROP CLICK
+// BACKDROP CLOSE
 // ======================================================
 
-document.addEventListener("click", function(event) {
+document.addEventListener(
+  "click",
+  function(event) {
 
-  if (event.target === document.getElementById("product-modal")) {
-    closeProductDetails();
+    const ids = [
+      "product-modal",
+      "cart-overlay",
+      "search-modal",
+      "account-modal",
+      "wishlist-modal",
+      "orders-overlay"
+    ];
+
+
+    ids.forEach(function(id) {
+
+      const overlay =
+        document.getElementById(id);
+
+      if (
+        overlay &&
+        event.target === overlay
+      ) {
+
+        if (id === "product-modal") {
+          closeProductDetails();
+        }
+
+        if (id === "cart-overlay") {
+          closeCart();
+        }
+
+        if (id === "search-modal") {
+          closeSearch();
+        }
+
+        if (id === "account-modal") {
+          closeAccount();
+        }
+
+        if (id === "wishlist-modal") {
+          closeWishlist();
+        }
+
+        if (id === "orders-overlay") {
+          closeOrders();
+        }
+
+      }
+
+    });
+
   }
-
-  if (event.target === document.getElementById("search-modal")) {
-    closeSearch();
-  }
-
-  if (event.target === document.getElementById("account-modal")) {
-    closeAccount();
-  }
-
-  if (event.target === document.getElementById("wishlist-modal")) {
-    closeWishlist();
-  }
-
-  if (event.target === document.getElementById("cart-overlay")) {
-    closeCart();
-  }
-
-});
+);
 
 
 // ======================================================
 // ESC KEY
 // ======================================================
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener(
+  "keydown",
+  function(event) {
 
-  if (event.key !== "Escape") return;
+    if (event.key !== "Escape") {
+      return;
+    }
 
-  closeProductDetails();
-  closeSearch();
-  closeAccount();
-  closeWishlist();
-  closeCart();
+    closeProductDetails();
+    closeCart();
+    closeSearch();
+    closeAccount();
+    closeWishlist();
+    closeOrders();
 
-});
+  }
+);
 
 
 // ======================================================
 // CHECKOUT FORM
 // ======================================================
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
 
-  const form =
-    document.getElementById("checkout-form");
+    const form =
+      document.getElementById("checkout-form");
 
-  if (form) {
-    form.addEventListener(
-      "submit",
-      handleCheckoutSubmit
-    );
+    if (form) {
+
+      form.addEventListener(
+        "submit",
+        submitCheckout
+      );
+
+    }
+
+    loadProducts();
+
+    updateCart();
+
   }
-
-  const mobile =
-    document.getElementById("customer-mobile");
-
-  if (mobile) {
-    mobile.addEventListener(
-      "input",
-      function() {
-        this.value =
-          this.value
-            .replace(/\D/g, "")
-            .slice(0, 10);
-      }
-    );
-  }
-
-  const pincode =
-    document.getElementById("customer-pincode");
-
-  if (pincode) {
-    pincode.addEventListener(
-      "input",
-      function() {
-        this.value =
-          this.value
-            .replace(/\D/g, "")
-            .slice(0, 6);
-      }
-    );
-  }
-
-  const loginMobile =
-    document.getElementById("login-mobile");
-
-  if (loginMobile) {
-    loginMobile.addEventListener(
-      "input",
-      function() {
-        this.value =
-          this.value
-            .replace(/\D/g, "")
-            .slice(0, 10);
-      }
-    );
-  }
-
-  loadProducts();
-  updateCart();
-
-});
+);
