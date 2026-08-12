@@ -1,16 +1,19 @@
 // ==========================================
-// HURAIN E-COMMERCE WEBSITE
-// CART + CATEGORY + WISHLIST SYSTEM
+// HURAIN FINAL WEBSITE SCRIPT
 // ==========================================
 
 const WHATSAPP_NUMBER = "919921181213";
 
+const DELIVERY_CHARGE = 100;
+
 
 // ==========================================
-// PRODUCTS
+// DEMO PRODUCTS
+// Later these can be replaced by Supabase
 // ==========================================
 
 const products = [
+
   {
     id: 1,
     name: "Luxury Jewellery Set",
@@ -18,6 +21,7 @@ const products = [
     price: 1499,
     image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: 2,
     name: "Premium Beauty Collection",
@@ -25,6 +29,7 @@ const products = [
     price: 999,
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: 3,
     name: "Elegant Bangles Set",
@@ -32,6 +37,7 @@ const products = [
     price: 799,
     image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: 4,
     name: "Luxury Perfume",
@@ -39,6 +45,7 @@ const products = [
     price: 1299,
     image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: 5,
     name: "Premium Hand Bag",
@@ -46,6 +53,7 @@ const products = [
     price: 1799,
     image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: 6,
     name: "Luxury Accessories",
@@ -53,79 +61,77 @@ const products = [
     price: 699,
     image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80"
   }
+
 ];
 
 
-// ==========================================
-// CART
-// ==========================================
+let cart = loadStorage(
+  "hurain_cart",
+  []
+);
 
-let cart = loadCart();
+let wishlist = loadStorage(
+  "hurain_wishlist",
+  []
+);
 
-
-// ==========================================
-// WISHLIST
-// ==========================================
-
-let wishlist = loadWishlist();
-
-
-// ==========================================
-// ACTIVE CATEGORY
-// ==========================================
+let orders = loadStorage(
+  "hurain_orders",
+  []
+);
 
 let activeCategory = "all";
 
+let searchText = "";
+
 
 // ==========================================
-// LOCAL STORAGE - CART
+// STORAGE
 // ==========================================
 
-function loadCart() {
+function loadStorage(key, fallback) {
 
   try {
 
-    const savedCart =
-      localStorage.getItem("hurain_cart");
+    const data =
+      localStorage.getItem(key);
 
-    if (!savedCart) {
-      return [];
+    if (!data) {
+      return fallback;
     }
 
-    const parsedCart =
-      JSON.parse(savedCart);
+    const parsed =
+      JSON.parse(data);
 
-    return Array.isArray(parsedCart)
-      ? parsedCart
-      : [];
+    return parsed ?? fallback;
 
   } catch (error) {
 
     console.error(
-      "Cart loading error:",
+      "Storage error:",
       error
     );
 
-    return [];
+    return fallback;
 
   }
 
 }
 
 
-function saveCart() {
+function saveStorage(key, value) {
 
   try {
 
     localStorage.setItem(
-      "hurain_cart",
-      JSON.stringify(cart)
+      key,
+      JSON.stringify(value)
     );
 
   } catch (error) {
 
     console.error(
-      "Cart saving error:",
+      "Storage save error:",
       error
     );
 
@@ -135,71 +141,12 @@ function saveCart() {
 
 
 // ==========================================
-// LOCAL STORAGE - WISHLIST
+// PRICE
 // ==========================================
 
-function loadWishlist() {
+function formatPrice(value) {
 
-  try {
-
-    const savedWishlist =
-      localStorage.getItem(
-        "hurain_wishlist"
-      );
-
-    if (!savedWishlist) {
-      return [];
-    }
-
-    const parsedWishlist =
-      JSON.parse(savedWishlist);
-
-    return Array.isArray(parsedWishlist)
-      ? parsedWishlist
-      : [];
-
-  } catch (error) {
-
-    console.error(
-      "Wishlist loading error:",
-      error
-    );
-
-    return [];
-
-  }
-
-}
-
-
-function saveWishlist() {
-
-  try {
-
-    localStorage.setItem(
-      "hurain_wishlist",
-      JSON.stringify(wishlist)
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Wishlist saving error:",
-      error
-    );
-
-  }
-
-}
-
-
-// ==========================================
-// PRICE FORMAT
-// ==========================================
-
-function formatPrice(price) {
-
-  return Number(price || 0)
+  return Number(value || 0)
     .toLocaleString("en-IN");
 
 }
@@ -212,87 +159,81 @@ function formatPrice(price) {
 function escapeHtml(value) {
 
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 }
 
 
 // ==========================================
-// PRODUCT FILTER
+// SHOP
 // ==========================================
+
+function showAllProducts() {
+
+  activeCategory = "all";
+
+  searchText = "";
+
+  const search =
+    document.getElementById(
+      "product-search"
+    );
+
+  if (search) {
+    search.value = "";
+  }
+
+  loadProducts();
+
+}
+
 
 function filterProducts(category) {
 
   activeCategory =
     category || "all";
 
-  const filterText =
-    document.getElementById(
-      "category-filter"
-    );
-
-  if (filterText) {
-
-    filterText.textContent =
-      activeCategory === "all"
-        ? "Showing All Products"
-        : "Showing " +
-          activeCategory +
-          " Products";
-
-  }
-
   loadProducts();
-
-  const productsSection =
-    document.getElementById(
-      "products"
-    );
-
-  if (productsSection) {
-
-    setTimeout(() => {
-
-      productsSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    }, 50);
-
-  }
 
 }
 
 
-// ==========================================
-// LOAD PRODUCTS
-// ==========================================
+function searchProducts(value) {
+
+  searchText =
+    String(value || "")
+      .trim()
+      .toLowerCase();
+
+  loadProducts();
+
+}
+
 
 function loadProducts() {
 
-  const productGrid =
+  const grid =
     document.getElementById(
       "product-grid"
     );
 
-  if (!productGrid) {
+  if (!grid) {
     return;
   }
 
 
-  let visibleProducts =
-    products;
+  let visible =
+    [...products];
 
 
   if (activeCategory !== "all") {
 
-    visibleProducts =
-      products.filter(
+    visible =
+      visible.filter(
         product =>
           product.category ===
           activeCategory
@@ -301,20 +242,54 @@ function loadProducts() {
   }
 
 
-  if (visibleProducts.length === 0) {
+  if (searchText) {
 
-    productGrid.innerHTML = `
+    visible =
+      visible.filter(
+        product =>
+          product.name
+            .toLowerCase()
+            .includes(searchText) ||
+
+          product.category
+            .toLowerCase()
+            .includes(searchText)
+      );
+
+  }
+
+
+  const filterLabel =
+    document.getElementById(
+      "category-filter"
+    );
+
+  if (filterLabel) {
+
+    filterLabel.textContent =
+      activeCategory === "all"
+        ? "Showing All Products"
+        : "Showing " +
+          activeCategory +
+          " Products";
+
+  }
+
+
+  if (!visible.length) {
+
+    grid.innerHTML = `
 
       <div class="empty-products">
 
         <div>✨</div>
 
         <h3>
-          No Products Available
+          No Products Found
         </h3>
 
         <p>
-          Products in this category will appear here.
+          Please try another category or search.
         </p>
 
       </div>
@@ -326,10 +301,10 @@ function loadProducts() {
   }
 
 
-  productGrid.innerHTML = "";
+  grid.innerHTML = "";
 
 
-  visibleProducts.forEach(
+  visible.forEach(
     product => {
 
       const cartItem =
@@ -345,7 +320,7 @@ function loadProducts() {
           : 0;
 
 
-      const isFavourite =
+      const favourite =
         wishlist.includes(
           product.id
         );
@@ -377,23 +352,23 @@ function loadProducts() {
           <button
             type="button"
             class="wishlist-button"
-            onclick="toggleWishlist(${product.id})"
-            aria-label="Add to wishlist"
+            onclick="toggleWishlist(event, ${product.id})"
+            aria-label="Favourite product"
             style="
               position:absolute;
-              top:12px;
-              right:12px;
+              top:10px;
+              right:10px;
               z-index:5;
               border:0;
-              background:rgba(255,255,255,0.92);
+              background:#fff;
               border-radius:50%;
-              width:40px;
-              height:40px;
+              width:42px;
+              height:42px;
               cursor:pointer;
-              font-size:20px;
+              font-size:21px;
             "
           >
-            ${isFavourite ? "❤️" : "♡"}
+            ${favourite ? "❤️" : "♡"}
           </button>
 
         </div>
@@ -416,62 +391,65 @@ function loadProducts() {
 
           <div
             class="product-cart-control"
-            style="margin-top:12px;"
+            style="
+              margin-top:12px;
+              width:100%;
+            "
           >
 
             ${
               quantity === 0
 
-                ? `
+              ?
+
+              `
+                <button
+                  type="button"
+                  class="add-cart"
+                  onclick="addToCart(event, ${product.id})"
+                >
+                  ADD TO CART
+                </button>
+              `
+
+              :
+
+              `
+                <div
+                  class="quantity-control"
+                  style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    gap:20px;
+                    width:100%;
+                    box-sizing:border-box;
+                  "
+                >
 
                   <button
                     type="button"
-                    class="add-cart"
-                    onclick="addToCart(${product.id})"
+                    onclick="decreaseQuantity(event, ${product.id})"
+                    aria-label="Decrease quantity"
                   >
-                    ADD TO CART
+                    −
                   </button>
 
-                `
+                  <strong>
+                    ${quantity}
+                  </strong>
 
-                : `
-
-                  <div
-                    class="quantity-control"
-                    style="
-                      display:flex;
-                      align-items:center;
-                      justify-content:center;
-                      gap:18px;
-                      border:1px solid #ddd;
-                      border-radius:8px;
-                      padding:8px;
-                    "
+                  <button
+                    type="button"
+                    onclick="increaseQuantity(event, ${product.id})"
+                    aria-label="Increase quantity"
                   >
+                    +
+                  </button>
 
-                    <button
-                      type="button"
-                      onclick="decreaseQuantity(${product.id})"
-                      aria-label="Decrease quantity"
-                    >
-                      −
-                    </button>
+                </div>
+              `
 
-                    <strong>
-                      ${quantity}
-                    </strong>
-
-                    <button
-                      type="button"
-                      onclick="increaseQuantity(${product.id})"
-                      aria-label="Increase quantity"
-                    >
-                      +
-                    </button>
-
-                  </div>
-
-                `
             }
 
           </div>
@@ -481,7 +459,7 @@ function loadProducts() {
       `;
 
 
-      productGrid.appendChild(card);
+      grid.appendChild(card);
 
     }
   );
@@ -490,10 +468,13 @@ function loadProducts() {
 
 
 // ==========================================
-// ADD TO CART
+// CART
 // ==========================================
 
-function addToCart(productId) {
+function addToCart(event, productId) {
+
+  stopEvent(event);
+
 
   const product =
     products.find(
@@ -503,13 +484,7 @@ function addToCart(productId) {
 
 
   if (!product) {
-
-    alert(
-      "Product could not be found."
-    );
-
     return;
-
   }
 
 
@@ -545,7 +520,11 @@ function addToCart(productId) {
   }
 
 
-  saveCart();
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
+
 
   updateCart();
 
@@ -554,11 +533,13 @@ function addToCart(productId) {
 }
 
 
-// ==========================================
-// INCREASE
-// ==========================================
+function increaseQuantity(
+  event,
+  productId
+) {
 
-function increaseQuantity(productId) {
+  stopEvent(event);
+
 
   const item =
     cart.find(
@@ -569,7 +550,10 @@ function increaseQuantity(productId) {
 
   if (!item) {
 
-    addToCart(productId);
+    addToCart(
+      null,
+      productId
+    );
 
     return;
 
@@ -579,7 +563,11 @@ function increaseQuantity(productId) {
   item.quantity += 1;
 
 
-  saveCart();
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
+
 
   updateCart();
 
@@ -588,11 +576,13 @@ function increaseQuantity(productId) {
 }
 
 
-// ==========================================
-// DECREASE
-// ==========================================
+function decreaseQuantity(
+  event,
+  productId
+) {
 
-function decreaseQuantity(productId) {
+  stopEvent(event);
+
 
   const item =
     cart.find(
@@ -620,7 +610,11 @@ function decreaseQuantity(productId) {
   }
 
 
-  saveCart();
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
+
 
   updateCart();
 
@@ -629,11 +623,13 @@ function decreaseQuantity(productId) {
 }
 
 
-// ==========================================
-// REMOVE FROM CART
-// ==========================================
+function removeFromCart(
+  event,
+  productId
+) {
 
-function removeFromCart(productId) {
+  stopEvent(event);
+
 
   cart =
     cart.filter(
@@ -642,7 +638,11 @@ function removeFromCart(productId) {
     );
 
 
-  saveCart();
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
+
 
   updateCart();
 
@@ -651,82 +651,74 @@ function removeFromCart(productId) {
 }
 
 
-// ==========================================
-// CART TOTAL
-// ==========================================
-
 function getCartQuantity() {
 
   return cart.reduce(
-    (total, item) =>
-      total + item.quantity,
+    (sum, item) =>
+      sum + Number(item.quantity || 0),
     0
   );
 
 }
 
 
-function getCartTotal() {
+function getCartSubtotal() {
 
   return cart.reduce(
-    (total, item) =>
-      total +
-      item.price *
-      item.quantity,
+    (sum, item) =>
+      sum +
+      Number(item.price || 0) *
+      Number(item.quantity || 0),
     0
   );
 
 }
 
-
-// ==========================================
-// UPDATE CART
-// ==========================================
 
 function updateCart() {
 
-  const cartCount =
+  const count =
     document.getElementById(
       "cart-count"
     );
 
-  const cartItems =
-    document.getElementById(
-      "cart-items"
-    );
-
-  const cartTotal =
+  const total =
     document.getElementById(
       "cart-total"
     );
 
+  const items =
+    document.getElementById(
+      "cart-items"
+    );
 
-  if (cartCount) {
 
-    cartCount.textContent =
+  if (count) {
+
+    count.textContent =
       getCartQuantity();
 
   }
 
 
-  if (cartTotal) {
+  if (total) {
 
-    cartTotal.textContent =
+    total.textContent =
       formatPrice(
-        getCartTotal()
+        getCartSubtotal()
       );
 
   }
 
 
-  if (!cartItems) {
+  if (!items) {
     return;
   }
 
 
-  if (cart.length === 0) {
+  if (!cart.length) {
 
-    cartItems.innerHTML = `
+    items.innerHTML = `
 
       <div class="empty-cart">
 
@@ -743,7 +735,7 @@ function updateCart() {
   }
 
 
-  cartItems.innerHTML = "";
+  items.innerHTML = "";
 
 
   cart.forEach(
@@ -761,9 +753,7 @@ function updateCart() {
 
       row.innerHTML = `
 
-        <div
-          class="cart-item-info"
-        >
+        <div class="cart-item-info">
 
           <strong>
             ${escapeHtml(item.name)}
@@ -782,7 +772,7 @@ function updateCart() {
 
           <button
             type="button"
-            onclick="decreaseQuantity(${item.id})"
+            onclick="decreaseQuantity(event, ${item.id})"
           >
             −
           </button>
@@ -793,7 +783,7 @@ function updateCart() {
 
           <button
             type="button"
-            onclick="increaseQuantity(${item.id})"
+            onclick="increaseQuantity(event, ${item.id})"
           >
             +
           </button>
@@ -803,7 +793,7 @@ function updateCart() {
 
         <button
           type="button"
-          onclick="removeFromCart(${item.id})"
+          onclick="removeFromCart(event, ${item.id})"
         >
           Remove
         </button>
@@ -811,7 +801,7 @@ function updateCart() {
       `;
 
 
-      cartItems.appendChild(row);
+      items.appendChild(row);
 
     }
   );
@@ -820,10 +810,13 @@ function updateCart() {
 
 
 // ==========================================
-// OPEN CART
+// CART OPEN/CLOSE
 // ==========================================
 
 function openCart() {
+
+  updateCart();
+
 
   const overlay =
     document.getElementById(
@@ -836,11 +829,14 @@ function openCart() {
   }
 
 
-  updateCart();
-
-
   overlay.classList.add(
     "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
   );
 
 
@@ -849,10 +845,6 @@ function openCart() {
 
 }
 
-
-// ==========================================
-// CLOSE CART
-// ==========================================
 
 function closeCart() {
 
@@ -872,6 +864,12 @@ function closeCart() {
   );
 
 
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
   document.body.style.overflow =
     "";
 
@@ -882,7 +880,13 @@ function closeCart() {
 // WISHLIST
 // ==========================================
 
-function toggleWishlist(productId) {
+function toggleWishlist(
+  event,
+  productId
+) {
+
+  stopEvent(event);
+
 
   const index =
     wishlist.indexOf(
@@ -892,7 +896,9 @@ function toggleWishlist(productId) {
 
   if (index === -1) {
 
-    wishlist.push(productId);
+    wishlist.push(
+      productId
+    );
 
   } else {
 
@@ -904,20 +910,151 @@ function toggleWishlist(productId) {
   }
 
 
-  saveWishlist();
+  saveStorage(
+    "hurain_wishlist",
+    wishlist
+  );
+
 
   loadProducts();
 
 }
 
 
+function showWishlist() {
+
+  const overlay =
+    document.getElementById(
+      "wishlist-overlay"
+    );
+
+  const container =
+    document.getElementById(
+      "wishlist-items"
+    );
+
+
+  if (!overlay || !container) {
+    return;
+  }
+
+
+  const favouriteProducts =
+    products.filter(
+      product =>
+        wishlist.includes(
+          product.id
+        )
+    );
+
+
+  if (!favouriteProducts.length) {
+
+    container.innerHTML = `
+
+      <p>
+        Your wishlist is empty.
+      </p>
+
+    `;
+
+  } else {
+
+    container.innerHTML =
+      favouriteProducts
+        .map(
+          product => `
+
+            <div class="wishlist-item">
+
+              <img
+                src="${product.image}"
+                alt="${escapeHtml(product.name)}"
+                style="
+                  width:70px;
+                  height:70px;
+                  object-fit:cover;
+                "
+              >
+
+              <strong>
+                ${escapeHtml(product.name)}
+              </strong>
+
+              <span>
+                ₹${formatPrice(product.price)}
+              </span>
+
+              <button
+                type="button"
+                onclick="addToCart(event, ${product.id})"
+              >
+                ADD TO CART
+              </button>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+  }
+
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeWishlist() {
+
+  const overlay =
+    document.getElementById(
+      "wishlist-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.remove(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
 // ==========================================
-// WHATSAPP ORDER
+// CHECKOUT
 // ==========================================
 
-function orderOnWhatsApp() {
+function openCheckout() {
 
-  if (cart.length === 0) {
+  if (!cart.length) {
 
     alert(
       "Your cart is empty. Please add a product first."
@@ -928,16 +1065,531 @@ function orderOnWhatsApp() {
   }
 
 
+  closeCart();
+
+
+  renderCheckoutSummary();
+
+
+  const overlay =
+    document.getElementById(
+      "checkout-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeCheckout() {
+
+  const overlay =
+    document.getElementById(
+      "checkout-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.remove(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+function renderCheckoutSummary() {
+
+  const summary =
+    document.getElementById(
+      "checkout-summary"
+    );
+
+
+  if (!summary) {
+    return;
+  }
+
+
+  const subtotal =
+    getCartSubtotal();
+
+
+  const delivery =
+    cart.length
+      ? DELIVERY_CHARGE
+      : 0;
+
+
+  const grandTotal =
+    subtotal +
+    delivery;
+
+
+  summary.innerHTML = `
+
+    <div class="checkout-summary-box">
+
+      <h3>
+        Order Summary
+      </h3>
+
+      ${cart
+        .map(
+          item => `
+
+            <div
+              class="summary-row"
+            >
+
+              <span>
+                ${escapeHtml(item.name)}
+                × ${item.quantity}
+              </span>
+
+              <strong>
+                ₹${formatPrice(
+                  item.price *
+                  item.quantity
+                )}
+              </strong>
+
+            </div>
+
+          `
+        )
+        .join("")}
+
+
+      <hr>
+
+
+      <div class="summary-row">
+
+        <span>
+          Product Total
+        </span>
+
+        <strong>
+          ₹${formatPrice(subtotal)}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span>
+          Delivery
+        </span>
+
+        <strong>
+          ₹${formatPrice(delivery)}
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row grand-total">
+
+        <span>
+          Grand Total
+        </span>
+
+        <strong>
+          ₹${formatPrice(grandTotal)}
+        </strong>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+// ==========================================
+// VALIDATION
+// ==========================================
+
+function clearErrors() {
+
+  const errors = [
+    "name-error",
+    "mobile-error",
+    "address-error",
+    "city-error",
+    "state-error",
+    "pincode-error"
+  ];
+
+
+  errors.forEach(
+    id => {
+
+      const element =
+        document.getElementById(id);
+
+      if (element) {
+        element.textContent = "";
+      }
+
+    }
+  );
+
+}
+
+
+function setError(
+  id,
+  message
+) {
+
+  const element =
+    document.getElementById(id);
+
+  if (element) {
+
+    element.textContent =
+      message;
+
+  }
+
+}
+
+
+function submitCheckout(event) {
+
+  stopEvent(event);
+
+
+  clearErrors();
+
+
+  if (!cart.length) {
+
+    alert(
+      "Your cart is empty."
+    );
+
+    closeCheckout();
+
+    return;
+
+  }
+
+
+  const name =
+    document
+      .getElementById(
+        "customer-name"
+      )
+      .value
+      .trim();
+
+
+  const mobile =
+    document
+      .getElementById(
+        "customer-mobile"
+      )
+      .value
+      .replace(/\D/g, "");
+
+
+  const address =
+    document
+      .getElementById(
+        "customer-address"
+      )
+      .value
+      .trim();
+
+
+  const city =
+    document
+      .getElementById(
+        "customer-city"
+      )
+      .value
+      .trim();
+
+
+  const state =
+    document
+      .getElementById(
+        "customer-state"
+      )
+      .value
+      .trim();
+
+
+  const pincode =
+    document
+      .getElementById(
+        "customer-pincode"
+      )
+      .value
+      .replace(/\D/g, "");
+
+
+  let valid = true;
+
+
+  if (name.length < 2) {
+
+    setError(
+      "name-error",
+      "Please enter your full name."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (!/^[6-9]\d{9}$/.test(mobile)) {
+
+    setError(
+      "mobile-error",
+      "Please enter a valid 10-digit mobile number."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (address.length < 5) {
+
+    setError(
+      "address-error",
+      "Please enter your complete address."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (city.length < 2) {
+
+    setError(
+      "city-error",
+      "Please enter your city."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (state.length < 2) {
+
+    setError(
+      "state-error",
+      "Please enter your state."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (!/^\d{6}$/.test(pincode)) {
+
+    setError(
+      "pincode-error",
+      "Please enter a valid 6-digit pincode."
+    );
+
+    valid = false;
+
+  }
+
+
+  if (!valid) {
+
+    return;
+
+  }
+
+
+  createWhatsAppOrder({
+
+    name,
+    mobile,
+    address,
+    city,
+    state,
+    pincode
+
+  });
+
+}
+
+
+// ==========================================
+// CREATE ORDER
+// ==========================================
+
+function createWhatsAppOrder(
+  customer
+) {
+
+  const subtotal =
+    getCartSubtotal();
+
+
+  const delivery =
+    DELIVERY_CHARGE;
+
+
+  const grandTotal =
+    subtotal +
+    delivery;
+
+
+  const orderId =
+    generateOrderId();
+
+
+  const order = {
+
+    id: orderId,
+
+    date:
+      new Date()
+        .toISOString(),
+
+    status:
+      "Order Placed",
+
+    customer,
+
+    items:
+      cart.map(
+        item => ({
+          ...item
+        })
+      ),
+
+    subtotal,
+
+    delivery,
+
+    total:
+      grandTotal
+
+  };
+
+
+  orders.unshift(
+    order
+  );
+
+
+  saveStorage(
+    "hurain_orders",
+    orders
+  );
+
+
   let message =
-    "HURAIN NEW ORDER\n\n";
+    "🛍️ HURAIN NEW ORDER\n\n";
+
+
+  message +=
+    "Order ID: " +
+    orderId +
+    "\n\n";
+
+
+  message +=
+    "👤 CUSTOMER DETAILS\n";
+
+  message +=
+    "Name: " +
+    customer.name +
+    "\n";
+
+  message +=
+    "Mobile: " +
+    customer.mobile +
+    "\n\n";
+
+
+  message +=
+    "📍 DELIVERY ADDRESS\n";
+
+  message +=
+    customer.address +
+    "\n";
+
+  message +=
+    "City: " +
+    customer.city +
+    "\n";
+
+  message +=
+    "State: " +
+    customer.state +
+    "\n";
+
+  message +=
+    "Pincode: " +
+    customer.pincode +
+    "\n\n";
+
+
+  message +=
+    "🛒 ORDER DETAILS\n\n";
 
 
   cart.forEach(
-    item => {
+    (item, index) => {
 
       message +=
-        "Product: " +
+        (index + 1) +
+        ". " +
         item.name +
+        "\n";
+
+      message +=
+        "Category: " +
+        item.category +
         "\n";
 
       message +=
@@ -946,10 +1598,24 @@ function orderOnWhatsApp() {
         "\n";
 
       message +=
+        "Price: ₹" +
+        formatPrice(
+          item.price
+        ) +
+        "\n";
+
+      message +=
         "Product Total: ₹" +
         formatPrice(
           item.price *
           item.quantity
+        ) +
+        "\n";
+
+      message +=
+        "Product Link: " +
+        getProductLink(
+          item.id
         ) +
         "\n\n";
 
@@ -958,13 +1624,34 @@ function orderOnWhatsApp() {
 
 
   message +=
+    "Product Total: ₹" +
+    formatPrice(
+      subtotal
+    ) +
+    "\n";
+
+
+  message +=
+    "Delivery: ₹" +
+    formatPrice(
+      delivery
+    ) +
+    "\n";
+
+
+  message +=
     "Grand Total: ₹" +
     formatPrice(
-      getCartTotal()
-    );
+      grandTotal
+    ) +
+    "\n\n";
 
 
-  const url =
+  message +=
+    "Thank you for shopping with HURAIN ❤️";
+
+
+  const whatsappURL =
     "https://wa.me/" +
     WHATSAPP_NUMBER +
     "?text=" +
@@ -974,62 +1661,500 @@ function orderOnWhatsApp() {
 
 
   window.open(
-    url,
+    whatsappURL,
     "_blank",
     "noopener,noreferrer"
+  );
+
+
+  // Clear cart after creating order
+
+  cart = [];
+
+
+  saveStorage(
+    "hurain_cart",
+    cart
+  );
+
+
+  updateCart();
+
+  loadProducts();
+
+
+  closeCheckout();
+
+
+  setTimeout(
+    () => {
+
+      alert(
+        "Order details are ready on WhatsApp.\n\nOrder ID: " +
+        orderId
+      );
+
+    },
+    300
   );
 
 }
 
 
 // ==========================================
-// CLICK OUTSIDE CART
+// PRODUCT LINK
+// ==========================================
+
+function getProductLink(
+  productId
+) {
+
+  return (
+    window.location.origin +
+    window.location.pathname +
+    "#product-" +
+    productId
+  );
+
+}
+
+
+// ==========================================
+// ORDER ID
+// ==========================================
+
+function generateOrderId() {
+
+  const random =
+    Math.floor(
+      1000 +
+      Math.random() *
+      9000
+    );
+
+
+  return (
+    "HURAIN-" +
+    Date.now()
+      .toString()
+      .slice(-6) +
+    "-" +
+    random
+  );
+
+}
+
+
+// ==========================================
+// ORDERS
+// ==========================================
+
+function showOrders() {
+
+  closeAccount();
+
+
+  const overlay =
+    document.getElementById(
+      "orders-overlay"
+    );
+
+
+  const list =
+    document.getElementById(
+      "orders-list"
+    );
+
+
+  if (!overlay || !list) {
+    return;
+  }
+
+
+  if (!orders.length) {
+
+    list.innerHTML = `
+
+      <p>
+        No orders found.
+      </p>
+
+    `;
+
+  } else {
+
+    list.innerHTML =
+      orders
+        .map(
+          order => `
+
+            <div class="order-card">
+
+              <h3>
+                ${escapeHtml(order.id)}
+              </h3>
+
+              <p>
+                ${new Date(
+                  order.date
+                ).toLocaleString("en-IN")}
+              </p>
+
+              <strong>
+                Status:
+                ${escapeHtml(order.status)}
+              </strong>
+
+              <p>
+                Total:
+                ₹${formatPrice(order.total)}
+              </p>
+
+              <button
+                type="button"
+                onclick="showOrderDetails('${order.id}')"
+              >
+                VIEW ORDER
+              </button>
+
+            </div>
+
+          `
+        )
+        .join("");
+
+  }
+
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function showOrderDetails(
+  orderId
+) {
+
+  const order =
+    orders.find(
+      item =>
+        item.id === orderId
+    );
+
+
+  if (!order) {
+    return;
+  }
+
+
+  alert(
+
+    "Order: " +
+    order.id +
+    "\n\n" +
+
+    "Status: " +
+    order.status +
+    "\n\n" +
+
+    "Customer: " +
+    order.customer.name +
+    "\n" +
+
+    "Mobile: " +
+    order.customer.mobile +
+    "\n\n" +
+
+    "Total: ₹" +
+    formatPrice(
+      order.total
+    )
+
+  );
+
+}
+
+
+function closeOrders() {
+
+  const overlay =
+    document.getElementById(
+      "orders-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.remove(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+// ==========================================
+// ACCOUNT
+// ==========================================
+
+function openAccount() {
+
+  const overlay =
+    document.getElementById(
+      "account-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeAccount() {
+
+  const overlay =
+    document.getElementById(
+      "account-overlay"
+    );
+
+
+  if (!overlay) {
+    return;
+  }
+
+
+  overlay.classList.remove(
+    "active"
+  );
+
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+function requestLogin() {
+
+  const input =
+    document.getElementById(
+      "account-mobile"
+    );
+
+
+  if (!input) {
+    return;
+  }
+
+
+  const mobile =
+    input.value
+      .replace(/\D/g, "");
+
+
+  if (!/^[6-9]\d{9}$/.test(mobile)) {
+
+    alert(
+      "Please enter a valid 10-digit mobile number."
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "Mobile number saved for the next secure OTP login step."
+  );
+
+}
+
+
+// ==========================================
+// SEARCH
+// ==========================================
+
+function focusSearch() {
+
+  const search =
+    document.getElementById(
+      "product-search"
+    );
+
+
+  if (!search) {
+    return;
+  }
+
+
+  document
+    .getElementById(
+      "products"
+    )
+    ?.scrollIntoView({
+      behavior: "smooth"
+    });
+
+
+  setTimeout(
+    () => {
+
+      search.focus();
+
+    },
+    400
+  );
+
+}
+
+
+// ==========================================
+// ESCAPE / EVENT CONTROL
+// ==========================================
+
+function stopEvent(
+  event
+) {
+
+  if (!event) {
+    return;
+  }
+
+
+  event.preventDefault();
+
+  event.stopPropagation();
+
+}
+
+
+// ==========================================
+// CLOSE MODALS ON BACKDROP
 // ==========================================
 
 document.addEventListener(
   "click",
   function(event) {
 
-    const overlay =
-      document.getElementById(
-        "cart-overlay"
-      );
-
-    const panel =
-      document.querySelector(
-        ".cart-panel"
-      );
-
-    const cartButton =
-      document.querySelector(
-        ".cart-button"
-      );
+    const overlays = [
+      "cart-overlay",
+      "checkout-overlay",
+      "account-overlay",
+      "wishlist-overlay",
+      "orders-overlay"
+    ];
 
 
-    if (
-      !overlay ||
-      !panel
-    ) {
-      return;
-    }
+    overlays.forEach(
+      id => {
+
+        const overlay =
+          document.getElementById(
+            id
+          );
 
 
-    if (
-      overlay.classList.contains(
-        "active"
-      ) &&
-      !panel.contains(
-        event.target
-      ) &&
-      (!cartButton ||
-        !cartButton.contains(
-          event.target
-        ))
-    ) {
+        if (
+          overlay &&
+          event.target === overlay
+        ) {
 
-      closeCart();
+          if (
+            id ===
+            "cart-overlay"
+          ) {
 
-    }
+            closeCart();
+
+          }
+
+          if (
+            id ===
+            "checkout-overlay"
+          ) {
+
+            closeCheckout();
+
+          }
+
+          if (
+            id ===
+            "account-overlay"
+          ) {
+
+            closeAccount();
+
+          }
+
+          if (
+            id ===
+            "wishlist-overlay"
+          ) {
+
+            closeWishlist();
+
+          }
+
+          if (
+            id ===
+            "orders-overlay"
+          ) {
+
+            closeOrders();
+
+          }
+
+        }
+
+      }
+    );
 
   }
 );
@@ -1044,10 +2169,19 @@ document.addEventListener(
   function(event) {
 
     if (
-      event.key === "Escape"
+      event.key ===
+      "Escape"
     ) {
 
       closeCart();
+
+      closeCheckout();
+
+      closeAccount();
+
+      closeWishlist();
+
+      closeOrders();
 
     }
 
