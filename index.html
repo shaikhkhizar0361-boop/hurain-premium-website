@@ -2,206 +2,307 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="HURAIN Imitation Jewellery & Cosmetics"
+  >
 
   <title>HURAIN | Imitation Jewellery & Cosmetics</title>
 
-  <meta name="description"
-    content="HURAIN Imitation Jewellery & Cosmetics - Jewellery, Cosmetics, Bangles, Perfumes, Hand Bags & Accessories.">
+  <!-- Google Font -->
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Your CSS -->
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
+
 
 <body>
 
-  <!-- ANNOUNCEMENT -->
-  <div class="announcement">
-    ✨ Welcome to HURAIN — Luxury Collection Available ✨
-  </div>
+  <!-- ==================================================
+       HEADER
+  =================================================== -->
 
-  <!-- HEADER -->
-  <header class="header">
+  <header class="site-header">
 
-    <a href="#home" class="logo" aria-label="HURAIN Home">
-      <span>H</span>
+    <div class="header-inner">
 
-      <div>
-        <strong>HURAIN</strong>
-        <small>IMITATION JEWELLERY & COSMETICS</small>
-      </div>
-    </a>
-
-    <div class="header-actions">
-
-      <button type="button" aria-label="Search" onclick="openSearch()">
-        ⌕
-      </button>
-
-      <button type="button" aria-label="Account" onclick="openAccount()">
-        ♙
-      </button>
-
-      <button type="button" aria-label="Wishlist" onclick="openWishlist()">
-        ♡
-      </button>
-
-      <button
-        type="button"
-        class="cart-button"
-        onclick="openCart()"
-        aria-label="Open Cart"
+      <a
+        href="#"
+        class="logo"
+        onclick="showAllProducts(); return false;"
       >
-        🛍️
-        <span>Cart</span>
-        <b id="cart-count">0</b>
-      </button>
+        <span class="logo-main">HURAIN</span>
+        <span class="logo-sub">
+          IMITATION JEWELLERY & COSMETICS
+        </span>
+      </a>
+
+
+      <nav class="desktop-nav">
+
+        <a
+          href="#"
+          onclick="showAllProducts(); return false;"
+        >
+          HOME
+        </a>
+
+        <a
+          href="#products"
+          onclick="filterProducts('Jewellery')"
+        >
+          JEWELLERY
+        </a>
+
+        <a
+          href="#products"
+          onclick="filterProducts('Cosmetics')"
+        >
+          COSMETICS
+        </a>
+
+        <a
+          href="#products"
+          onclick="filterProducts('Bangles')"
+        >
+          BANGLES
+        </a>
+
+        <a
+          href="#products"
+          onclick="filterProducts('Perfumes')"
+        >
+          PERFUMES
+        </a>
+
+      </nav>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="openSearch()"
+          aria-label="Search"
+        >
+          🔍
+        </button>
+
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="openWishlist()"
+          aria-label="Wishlist"
+        >
+          ♡
+        </button>
+
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="openAccount()"
+          aria-label="Account"
+        >
+          👤
+        </button>
+
+
+        <button
+          type="button"
+          class="cart-button"
+          onclick="openCart()"
+        >
+          🛒
+
+          <span
+            id="cart-count"
+            class="cart-count"
+          >
+            0
+          </span>
+        </button>
+
+      </div>
 
     </div>
 
   </header>
 
 
-  <!-- NAVIGATION -->
-  <nav class="navigation">
 
-    <a href="#home">Home</a>
-    <a href="#categories">Jewellery</a>
-    <a href="#categories">Cosmetics</a>
-    <a href="#categories">Bangles</a>
-    <a href="#categories">Perfumes</a>
-    <a href="#categories">Hand Bags</a>
-    <a href="#categories">Accessories</a>
+  <!-- ==================================================
+       HERO
+  =================================================== -->
 
-  </nav>
+  <main>
 
-
-  <!-- MAIN -->
-  <main id="home">
-
-    <!-- HERO -->
-    <section class="hero">
+    <section class="hero-section">
 
       <div class="hero-content">
 
-        <p class="hero-small">HURAIN COLLECTION</p>
-
-        <h1>
-          BEAUTY THAT
-          <span>SHINES</span>
-        </h1>
-
-        <p>
-          Discover our premium collection of imitation jewellery,
-          cosmetics, bangles, perfumes, handbags and accessories.
+        <p class="hero-small-title">
+          WELCOME TO HURAIN
         </p>
 
-        <div class="hero-buttons">
+        <h1>
+          Luxury That
+          <span>Defines You</span>
+        </h1>
 
-          <a href="#products" class="btn primary">
-            SHOP NOW
-          </a>
+        <p class="hero-description">
+          Discover premium imitation jewellery,
+          cosmetics, perfumes, bangles and accessories.
+        </p>
 
-        </div>
+        <button
+          type="button"
+          class="btn primary"
+          onclick="showAllProducts()"
+        >
+          SHOP COLLECTION
+        </button>
 
       </div>
 
     </section>
 
 
-    <!-- TRUST -->
-    <section class="trust-section">
 
-      <div class="trust-box">
-        <strong>31K+</strong>
-        <span>Happy Customers</span>
-      </div>
+    <!-- ==================================================
+         CATEGORY SECTION
+    =================================================== -->
 
-      <div class="trust-box">
-        <strong>100+</strong>
-        <span>Brands Available</span>
-      </div>
-
-      <div class="trust-box">
-        <strong>100%</strong>
-        <span>Quality Collection</span>
-      </div>
-
-      <div class="trust-box">
-        <strong>WhatsApp</strong>
-        <span>Easy Ordering</span>
-      </div>
-
-    </section>
-
-
-    <!-- CATEGORIES -->
-    <section id="categories" class="section">
+    <section class="category-section">
 
       <div class="section-heading">
-        <p>EXPLORE</p>
-        <h2>Shop By Category</h2>
+
+        <p>
+          EXPLORE
+        </p>
+
+        <h2>
+          SHOP BY CATEGORY
+        </h2>
+
       </div>
 
-      <div class="categories-grid">
+
+      <div class="category-grid">
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Jewellery')"
         >
-          <div class="category-icon">💎</div>
-          <h3>Jewellery</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            💎
+          </span>
+
+          <strong>
+            Jewellery
+          </strong>
         </button>
+
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Cosmetics')"
         >
-          <div class="category-icon">💄</div>
-          <h3>Cosmetics</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            💄
+          </span>
+
+          <strong>
+            Cosmetics
+          </strong>
         </button>
+
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Bangles')"
         >
-          <div class="category-icon">✨</div>
-          <h3>Bangles</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            ✨
+          </span>
+
+          <strong>
+            Bangles
+          </strong>
         </button>
+
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Perfumes')"
         >
-          <div class="category-icon">🌹</div>
-          <h3>Perfumes</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            🌹
+          </span>
+
+          <strong>
+            Perfumes
+          </strong>
         </button>
+
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Hand Bags')"
         >
-          <div class="category-icon">👜</div>
-          <h3>Hand Bags</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            👜
+          </span>
+
+          <strong>
+            Hand Bags
+          </strong>
         </button>
+
 
         <button
           type="button"
           class="category-card"
           onclick="filterProducts('Accessories')"
         >
-          <div class="category-icon">👑</div>
-          <h3>Accessories</h3>
-          <span>Explore Collection</span>
+          <span class="category-icon">
+            👑
+          </span>
+
+          <strong>
+            Accessories
+          </strong>
         </button>
 
       </div>
@@ -209,133 +310,34 @@
     </section>
 
 
-    <!-- PRODUCTS -->
-    <section id="products" class="section products-section">
+
+    <!-- ==================================================
+         PRODUCTS
+    =================================================== -->
+
+    <section
+      id="products"
+      class="products-section"
+    >
 
       <div class="section-heading">
-
-        <p>OUR COLLECTION</p>
-
-        <h2>Featured Products</h2>
-
-        <span>
-          Discover our latest premium collection
-        </span>
-
-      </div>
-
-      <div id="product-grid" class="product-grid">
-
-        <div class="empty-products">
-
-          <div>✨</div>
-
-          <h3>Collection Coming Soon</h3>
-
-          <p>
-            Our latest products will appear here.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- WHY HURAIN -->
-    <section class="why-section">
-
-      <div class="section-heading">
-
-        <p>WHY HURAIN</p>
-
-        <h2>Luxury You Can Trust</h2>
-
-      </div>
-
-      <div class="why-grid">
-
-        <div class="why-card">
-          <div>👑</div>
-          <h3>Premium Collection</h3>
-          <p>Carefully selected products for your style.</p>
-        </div>
-
-        <div class="why-card">
-          <div>💎</div>
-          <h3>Quality Products</h3>
-          <p>Quality and elegance are our priority.</p>
-        </div>
-
-        <div class="why-card">
-          <div>📦</div>
-          <h3>Easy Ordering</h3>
-          <p>Simple and secure ordering process.</p>
-        </div>
-
-        <div class="why-card">
-          <div>❤️</div>
-          <h3>31K+ Family</h3>
-          <p>Trusted by thousands of customers.</p>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- HOW TO ORDER -->
-    <section class="order-section">
-
-      <div class="section-heading">
-
-        <p>SIMPLE & EASY</p>
-
-        <h2>How To Order</h2>
-
-      </div>
-
-      <div class="order-steps">
-
-        <div class="order-step">
-          <span>01</span>
-          <h3>Choose Product</h3>
-          <p>Select your favourite product.</p>
-        </div>
-
-        <div class="order-step">
-          <span>02</span>
-          <h3>Add To Cart</h3>
-          <p>Choose quantity and add it to your cart.</p>
-        </div>
-
-        <div class="order-step">
-          <span>03</span>
-          <h3>Checkout</h3>
-          <p>Enter your delivery details and place your order.</p>
-        </div>
-
-      </div>
-
-
-      <div class="whatsapp-order">
-
-        <h3>Need Help With Your Order?</h3>
 
         <p>
-          Contact HURAIN directly on WhatsApp.
+          HURAIN COLLECTION
         </p>
 
-        <a
-          href="https://wa.me/919921181213"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="whatsapp-button"
-        >
-          💬 WhatsApp Us
-        </a>
+        <h2>
+          OUR PRODUCTS
+        </h2>
 
+      </div>
+
+
+      <div
+        id="product-grid"
+        class="product-grid"
+      >
+        <!-- Products generated by script.js -->
       </div>
 
     </section>
@@ -343,14 +345,49 @@
   </main>
 
 
-  <!-- PRODUCT DETAILS -->
+
+  <!-- ==================================================
+       CART TOTAL BAR
+  =================================================== -->
+
+  <div class="cart-bottom-bar">
+
+    <div>
+
+      <span>
+        Cart Total
+      </span>
+
+      <strong>
+        ₹<span id="cart-total">0</span>
+      </strong>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn primary"
+      onclick="openCart()"
+    >
+      VIEW CART
+    </button>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       PRODUCT DETAILS MODAL
+  =================================================== -->
+
   <div
     id="product-modal"
     class="modal-overlay"
     aria-hidden="true"
   >
 
-    <div class="modal-panel product-detail-panel">
+    <div class="modal-box product-modal-box">
 
       <button
         type="button"
@@ -361,47 +398,79 @@
         ×
       </button>
 
-      <div id="product-detail-content"></div>
+
+      <div
+        id="product-detail-content"
+        class="product-detail-content"
+      >
+        <!-- Product details generated by script.js -->
+      </div>
 
     </div>
 
   </div>
 
 
-  <!-- CART -->
+
+  <!-- ==================================================
+       CART MODAL
+  =================================================== -->
+
   <div
     id="cart-overlay"
-    class="cart-overlay"
+    class="modal-overlay"
     aria-hidden="true"
   >
 
-    <div class="cart-panel">
+    <div class="modal-box cart-box">
 
       <button
         type="button"
-        class="close-cart"
+        class="modal-close"
         onclick="closeCart()"
-        aria-label="Close Cart"
+        aria-label="Close"
       >
         ×
       </button>
 
-      <h2>Your Cart</h2>
 
-      <div id="cart-items">
-        <p>Your cart is empty.</p>
+      <div class="modal-heading">
+
+        <p>
+          HURAIN
+        </p>
+
+        <h2>
+          Your Cart
+        </h2>
+
       </div>
 
-      <div class="cart-footer">
 
-        <strong>
-          Total:
-          ₹<span id="cart-total">0</span>
-        </strong>
+      <div
+        id="cart-items"
+        class="cart-items"
+      >
+        <!-- Cart generated by script.js -->
+      </div>
+
+
+      <div class="cart-summary">
+
+        <div>
+          <span>
+            Subtotal
+          </span>
+
+          <strong>
+            ₹<span id="cart-modal-total">0</span>
+          </strong>
+        </div>
+
 
         <button
           type="button"
-          class="btn primary"
+          class="btn primary full-width"
           onclick="goToCheckout()"
         >
           PROCEED TO CHECKOUT
@@ -414,7 +483,230 @@
   </div>
 
 
-  <!-- CHECKOUT -->
+
+  <!-- ==================================================
+       SEARCH MODAL
+  =================================================== -->
+
+  <div
+    id="search-modal"
+    class="modal-overlay"
+    aria-hidden="true"
+  >
+
+    <div class="modal-box search-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeSearch()"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-heading">
+
+        <p>
+          HURAIN
+        </p>
+
+        <h2>
+          Search Products
+        </h2>
+
+      </div>
+
+
+      <input
+        id="search-input"
+        class="search-input"
+        type="search"
+        placeholder="Search jewellery, cosmetics..."
+        oninput="searchProducts(this.value)"
+      >
+
+
+      <div
+        id="search-results"
+        class="search-results"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       WISHLIST MODAL
+  =================================================== -->
+
+  <div
+    id="wishlist-modal"
+    class="modal-overlay"
+    aria-hidden="true"
+  >
+
+    <div class="modal-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeWishlist()"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-heading">
+
+        <p>
+          HURAIN
+        </p>
+
+        <h2>
+          My Wishlist
+        </h2>
+
+      </div>
+
+
+      <div
+        id="wishlist-items"
+        class="wishlist-items"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       ACCOUNT MODAL
+  =================================================== -->
+
+  <div
+    id="account-modal"
+    class="modal-overlay"
+    aria-hidden="true"
+  >
+
+    <div class="modal-box account-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeAccount()"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-heading">
+
+        <p>
+          HURAIN
+        </p>
+
+        <h2>
+          My Account
+        </h2>
+
+      </div>
+
+
+      <label for="login-mobile">
+        Mobile Number
+      </label>
+
+
+      <input
+        id="login-mobile"
+        class="form-input"
+        type="tel"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="Enter 10 digit mobile number"
+      >
+
+
+      <button
+        type="button"
+        class="btn primary full-width"
+        onclick="mobileLogin()"
+      >
+        SAVE MOBILE NUMBER
+      </button>
+
+
+      <button
+        type="button"
+        class="btn secondary full-width"
+        onclick="showOrders(); closeAccount()"
+      >
+        MY ORDERS
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       ORDERS MODAL
+  =================================================== -->
+
+  <div
+    id="orders-overlay"
+    class="modal-overlay"
+    aria-hidden="true"
+  >
+
+    <div class="modal-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeOrders()"
+      >
+        ×
+      </button>
+
+
+      <div class="modal-heading">
+
+        <p>
+          HURAIN
+        </p>
+
+        <h2>
+          My Orders
+        </h2>
+
+      </div>
+
+
+      <div
+        id="orders-list"
+        class="orders-list"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       CHECKOUT PAGE
+  =================================================== -->
+
   <section
     id="checkout-page"
     class="checkout-page"
@@ -428,218 +720,298 @@
         class="back-button"
         onclick="closeCheckout()"
       >
-        ← Back
+        ← Continue Shopping
       </button>
+
 
       <div class="section-heading">
 
-        <p>FINAL STEP</p>
+        <p>
+          HURAIN
+        </p>
 
-        <h2>Delivery Details</h2>
-
-        <span>
-          Please enter your details carefully.
-        </span>
+        <h2>
+          CHECKOUT
+        </h2>
 
       </div>
 
 
-      <form
-        id="checkout-form"
-        class="checkout-form"
-        novalidate
-      >
+      <div class="checkout-grid">
 
-        <div class="checkout-grid">
 
-          <div class="form-group">
+        <!-- CUSTOMER FORM -->
 
-            <label for="customer-name">
-              Full Name *
-            </label>
+        <div class="checkout-card">
 
-            <input
-              type="text"
-              id="customer-name"
-              name="customerName"
-              placeholder="Enter your full name"
-              autocomplete="name"
-              required
+          <h3>
+            Delivery Details
+          </h3>
+
+
+          <form
+            id="checkout-form"
+          >
+
+            <div class="form-group">
+
+              <label for="customer-name">
+                Full Name
+              </label>
+
+              <input
+                id="customer-name"
+                class="form-input"
+                type="text"
+                autocomplete="name"
+                placeholder="Enter your full name"
+              >
+
+              <small
+                id="customer-name-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="customer-mobile">
+                Mobile Number
+              </label>
+
+              <input
+                id="customer-mobile"
+                class="form-input"
+                type="tel"
+                inputmode="numeric"
+                maxlength="10"
+                autocomplete="tel"
+                placeholder="10 digit mobile number"
+              >
+
+              <small
+                id="customer-mobile-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="customer-address">
+                House / Flat Number
+              </label>
+
+              <input
+                id="customer-address"
+                class="form-input"
+                type="text"
+                autocomplete="street-address"
+                placeholder="House / Flat / Building"
+              >
+
+              <small
+                id="customer-address-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="customer-area">
+                Area / Street
+              </label>
+
+              <input
+                id="customer-area"
+                class="form-input"
+                type="text"
+                placeholder="Area / Street"
+              >
+
+              <small
+                id="customer-area-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-row">
+
+              <div class="form-group">
+
+                <label for="customer-city">
+                  City
+                </label>
+
+                <input
+                  id="customer-city"
+                  class="form-input"
+                  type="text"
+                  placeholder="City"
+                >
+
+                <small
+                  id="customer-city-error"
+                  class="form-error"
+                ></small>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="customer-pincode">
+                  Pincode
+                </label>
+
+                <input
+                  id="customer-pincode"
+                  class="form-input"
+                  type="tel"
+                  inputmode="numeric"
+                  maxlength="6"
+                  placeholder="6 digit pincode"
+                >
+
+                <small
+                  id="customer-pincode-error"
+                  class="form-error"
+                ></small>
+
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="customer-state">
+                State
+              </label>
+
+              <select
+                id="customer-state"
+                class="form-input"
+              >
+
+                <option value="">
+                  Select State
+                </option>
+
+                <option value="Maharashtra">
+                  Maharashtra
+                </option>
+
+                <option value="Gujarat">
+                  Gujarat
+                </option>
+
+                <option value="Madhya Pradesh">
+                  Madhya Pradesh
+                </option>
+
+                <option value="Rajasthan">
+                  Rajasthan
+                </option>
+
+                <option value="Karnataka">
+                  Karnataka
+                </option>
+
+                <option value="Telangana">
+                  Telangana
+                </option>
+
+                <option value="Goa">
+                  Goa
+                </option>
+
+                <option value="Delhi">
+                  Delhi
+                </option>
+
+                <option value="Uttar Pradesh">
+                  Uttar Pradesh
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+
+              </select>
+
+
+              <small
+                id="customer-state-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="delivery-note">
+                Delivery Note
+                <span>(Optional)</span>
+              </label>
+
+              <textarea
+                id="delivery-note"
+                class="form-input"
+                rows="3"
+                placeholder="Any special delivery instructions"
+              ></textarea>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="btn primary full-width"
             >
+              PLACE ORDER ON WHATSAPP
+            </button>
 
-            <small class="form-error" id="customer-name-error"></small>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="customer-mobile">
-              Mobile Number *
-            </label>
-
-            <input
-              type="tel"
-              id="customer-mobile"
-              name="mobile"
-              placeholder="10-digit mobile number"
-              inputmode="numeric"
-              maxlength="10"
-              autocomplete="tel"
-              required
-            >
-
-            <small class="form-error" id="customer-mobile-error"></small>
-
-          </div>
-
-
-          <div class="form-group full-width">
-
-            <label for="customer-address">
-              House / Flat No. *
-            </label>
-
-            <input
-              type="text"
-              id="customer-address"
-              name="address"
-              placeholder="House / Flat / Building"
-              autocomplete="street-address"
-              required
-            >
-
-            <small class="form-error" id="customer-address-error"></small>
-
-          </div>
-
-
-          <div class="form-group full-width">
-
-            <label for="customer-area">
-              Area / Street *
-            </label>
-
-            <input
-              type="text"
-              id="customer-area"
-              name="area"
-              placeholder="Area / Street / Locality"
-              required
-            >
-
-            <small class="form-error" id="customer-area-error"></small>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="customer-city">
-              City *
-            </label>
-
-            <input
-              type="text"
-              id="customer-city"
-              name="city"
-              placeholder="City"
-              autocomplete="address-level2"
-              required
-            >
-
-            <small class="form-error" id="customer-city-error"></small>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="customer-state">
-              State *
-            </label>
-
-            <select
-              id="customer-state"
-              name="state"
-              required
-            >
-
-              <option value="">
-                Select State
-              </option>
-
-              <option>Maharashtra</option>
-              <option>Gujarat</option>
-              <option>Madhya Pradesh</option>
-              <option>Telangana</option>
-              <option>Karnataka</option>
-              <option>Rajasthan</option>
-              <option>Delhi</option>
-              <option>Uttar Pradesh</option>
-              <option>Bihar</option>
-              <option>Other</option>
-
-            </select>
-
-            <small class="form-error" id="customer-state-error"></small>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="customer-pincode">
-              Pincode *
-            </label>
-
-            <input
-              type="text"
-              id="customer-pincode"
-              name="pincode"
-              placeholder="6-digit Pincode"
-              inputmode="numeric"
-              maxlength="6"
-              autocomplete="postal-code"
-              required
-            >
-
-            <small class="form-error" id="customer-pincode-error"></small>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="delivery-note">
-              Delivery Note
-            </label>
-
-            <input
-              type="text"
-              id="delivery-note"
-              name="deliveryNote"
-              placeholder="Optional"
-            >
-
-          </div>
+          </form>
 
         </div>
+
 
 
         <!-- ORDER SUMMARY -->
-        <div class="checkout-summary">
 
-          <h3>Order Summary</h3>
+        <div class="checkout-card order-summary-card">
 
-          <div id="checkout-items"></div>
+          <h3>
+            Order Summary
+          </h3>
+
+
+          <div
+            id="checkout-items"
+            class="checkout-items"
+          >
+          </div>
+
 
           <div class="summary-row">
 
-            <span>Product Total</span>
+            <span>
+              Product Total
+            </span>
 
             <strong>
-              ₹<span id="checkout-product-total">0</span>
+              ₹<span id="checkout-product-total">
+                0
+              </span>
             </strong>
 
           </div>
@@ -647,184 +1019,74 @@
 
           <div class="summary-row">
 
-            <span>Delivery</span>
+            <span>
+              Delivery
+            </span>
 
             <strong>
-              ₹<span id="checkout-delivery">100</span>
+              ₹<span id="checkout-delivery">
+                0
+              </span>
             </strong>
 
           </div>
 
 
-          <div class="summary-row grand-total">
+          <div class="summary-total">
 
-            <span>Grand Total</span>
+            <span>
+              Grand Total
+            </span>
 
             <strong>
-              ₹<span id="checkout-grand-total">100</span>
+              ₹<span id="checkout-grand-total">
+                0
+              </span>
             </strong>
+
+          </div>
+
+
+          <div class="whatsapp-note">
+
+            <strong>
+              📱 WhatsApp Order
+            </strong>
+
+            <p>
+              After submitting your order,
+              WhatsApp will open with your complete
+              order details.
+            </p>
 
           </div>
 
         </div>
 
-
-        <button
-          type="submit"
-          class="place-order-button"
-        >
-          📱 PLACE ORDER ON WHATSAPP
-        </button>
-
-
-        <p class="checkout-note">
-          By placing the order, you confirm that the entered
-          delivery details are correct.
-        </p>
-
-      </form>
+      </div>
 
     </div>
 
   </section>
 
 
-  <!-- SEARCH -->
-  <div
-    id="search-modal"
-    class="modal-overlay"
-    aria-hidden="true"
-  >
 
-    <div class="modal-panel">
+  <!-- ==================================================
+       FOOTER
+  =================================================== -->
 
-      <button
-        type="button"
-        class="modal-close"
-        onclick="closeSearch()"
-      >
-        ×
-      </button>
+  <footer class="site-footer">
 
-      <h2>Search Products</h2>
+    <div class="footer-inner">
 
-      <input
-        type="search"
-        id="search-input"
-        placeholder="Search jewellery, cosmetics..."
-        oninput="searchProducts(this.value)"
-      >
-
-      <div id="search-results"></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ACCOUNT -->
-  <div
-    id="account-modal"
-    class="modal-overlay"
-    aria-hidden="true"
-  >
-
-    <div class="modal-panel">
-
-      <button
-        type="button"
-        class="modal-close"
-        onclick="closeAccount()"
-      >
-        ×
-      </button>
-
-      <h2>My Account</h2>
-
-      <p>
-        Login with your mobile number to manage your orders.
-      </p>
-
-      <input
-        type="tel"
-        id="login-mobile"
-        placeholder="Enter mobile number"
-        maxlength="10"
-        inputmode="numeric"
-      >
-
-      <button
-        type="button"
-        class="btn primary"
-        onclick="mobileLogin()"
-      >
-        CONTINUE
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- WISHLIST -->
-  <div
-    id="wishlist-modal"
-    class="modal-overlay"
-    aria-hidden="true"
-  >
-
-    <div class="modal-panel">
-
-      <button
-        type="button"
-        class="modal-close"
-        onclick="closeWishlist()"
-      >
-        ×
-      </button>
-
-      <h2>My Favourites</h2>
-
-      <div id="wishlist-items">
-        <p>Your favourite products will appear here.</p>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- FOOTER -->
-  <footer class="footer">
-
-    <div class="footer-grid">
-
-      <div class="footer-brand">
+      <div>
 
         <div class="footer-logo">
-
-          <strong>HURAIN</strong>
-
-          <span>
-            IMITATION JEWELLERY & COSMETICS
-          </span>
-
+          HURAIN
         </div>
 
         <p>
-          Luxury imitation jewellery, cosmetics,
-          bangles, perfumes, handbags and accessories.
-        </p>
-
-        <p class="social">
-          Instagram:
-          <a
-            href="https://www.instagram.com/hurain_imitation/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @hurain_imitation
-          </a>
+          Imitation Jewellery & Cosmetics
         </p>
 
       </div>
@@ -832,55 +1094,47 @@
 
       <div>
 
-        <h3>Quick Links</h3>
+        <h4>
+          Quick Links
+        </h4>
 
-        <a href="#home">Home</a>
+        <a
+          href="#"
+          onclick="showAllProducts(); return false;"
+        >
+          Home
+        </a>
 
-        <a href="#categories">Categories</a>
+        <a
+          href="#products"
+          onclick="filterProducts('Jewellery')"
+        >
+          Jewellery
+        </a>
 
-        <a href="#products">Products</a>
-
-        <a href="#home">About HURAIN</a>
+        <a
+          href="#products"
+          onclick="filterProducts('Cosmetics')"
+        >
+          Cosmetics
+        </a>
 
       </div>
 
 
       <div>
 
-        <h3>Categories</h3>
-
-        <a href="#products">Jewellery</a>
-
-        <a href="#products">Cosmetics</a>
-
-        <a href="#products">Bangles</a>
-
-        <a href="#products">Perfumes</a>
-
-      </div>
-
-
-      <div>
-
-        <h3>Contact</h3>
+        <h4>
+          Customer Support
+        </h4>
 
         <p>
-          📍 City Chowk, Aurangabad
+          WhatsApp Orders Available
         </p>
 
-        <a
-          href="tel:+919921181213"
-        >
-          📞 +91 99211 81213
-        </a>
-
-        <a
-          href="https://wa.me/919921181213"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          💬 WhatsApp
-        </a>
+        <p>
+          Delivery Available
+        </p>
 
       </div>
 
@@ -889,32 +1143,19 @@
 
     <div class="footer-bottom">
 
-      <p>
-        © 2026 HURAIN. All Rights Reserved.
-      </p>
-
-      <p>
-        Luxury • Beauty • Elegance
-      </p>
+      © 2026 HURAIN.
+      All Rights Reserved.
 
     </div>
 
   </footer>
 
 
-  <!-- WHATSAPP FLOATING BUTTON -->
-  <a
-    href="https://wa.me/919921181213"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="floating-whatsapp"
-    aria-label="WhatsApp HURAIN"
-  >
-    💬
-  </a>
 
+  <!-- ==================================================
+       JAVASCRIPT
+  =================================================== -->
 
-  <!-- MAIN JAVASCRIPT -->
   <script src="script.js"></script>
 
 </body>
