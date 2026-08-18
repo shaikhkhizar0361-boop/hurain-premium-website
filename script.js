@@ -9,504 +9,79 @@ const DELIVERY_CHARGE = 100;
 
 
 // ======================================================
-// PRODUCTS
+// PRODUCTS (loaded live from Supabase — see loadProductsFromSupabase)
 // ======================================================
 
-const products = [
+let products = [];
 
-  // JEWELLERY
-  {
-    id: 1,
-    name: "Luxury Jewellery Set 01",
-    category: "Jewellery",
-    price: 1499,
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
-    description: "Premium luxury imitation jewellery collection."
-  },
-  {
-    id: 2,
-    name: "Luxury Jewellery Set 02",
-    category: "Jewellery",
-    price: 1599,
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant jewellery designed for a premium look."
-  },
-  {
-    id: 3,
-    name: "Luxury Jewellery Set 03",
-    category: "Jewellery",
-    price: 1799,
-    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful imitation jewellery for special occasions."
-  },
-  {
-    id: 4,
-    name: "Luxury Jewellery Set 04",
-    category: "Jewellery",
-    price: 1299,
-    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish jewellery collection from HURAIN."
-  },
-  {
-    id: 5,
-    name: "Luxury Jewellery Set 05",
-    category: "Jewellery",
-    price: 1899,
-    image: "https://images.unsplash.com/photo-1598560917807-1bae44bd2be8?auto=format&fit=crop&w=900&q=80",
-    description: "Premium design with elegant finishing."
-  },
-  {
-    id: 6,
-    name: "Luxury Jewellery Set 06",
-    category: "Jewellery",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant everyday jewellery collection."
-  },
-  {
-    id: 7,
-    name: "Luxury Jewellery Set 07",
-    category: "Jewellery",
-    price: 1399,
-    image: "https://images.unsplash.com/photo-1599459183200-59c7687a027b?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful premium imitation jewellery."
-  },
-  {
-    id: 8,
-    name: "Luxury Jewellery Set 08",
-    category: "Jewellery",
-    price: 1699,
-    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
-    description: "Perfect jewellery for parties and occasions."
-  },
-  {
-    id: 9,
-    name: "Luxury Jewellery Set 09",
-    category: "Jewellery",
-    price: 1199,
-    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
-    description: "Premium style at an attractive price."
-  },
-  {
-    id: 10,
-    name: "Luxury Jewellery Set 10",
-    category: "Jewellery",
-    price: 1999,
-    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury jewellery collection by HURAIN."
-  },
+let productsLoaded = false;
 
-  // COSMETICS
-  {
-    id: 11,
-    name: "Premium Beauty Collection 01",
-    category: "Cosmetics",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
-    description: "Premium cosmetics collection."
-  },
-  {
-    id: 12,
-    name: "Premium Beauty Collection 02",
-    category: "Cosmetics",
-    price: 899,
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
-    description: "Beauty essentials for your daily routine."
-  },
-  {
-    id: 13,
-    name: "Premium Beauty Collection 03",
-    category: "Cosmetics",
-    price: 1199,
-    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=80",
-    description: "Premium makeup and beauty products."
-  },
-  {
-    id: 14,
-    name: "Premium Beauty Collection 04",
-    category: "Cosmetics",
-    price: 749,
-    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful cosmetics collection."
-  },
-  {
-    id: 15,
-    name: "Premium Beauty Collection 05",
-    category: "Cosmetics",
-    price: 1299,
-    image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=900&q=80",
-    description: "Premium beauty products from HURAIN."
-  },
-  {
-    id: 16,
-    name: "Premium Beauty Collection 06",
-    category: "Cosmetics",
-    price: 699,
-    image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=900&q=80",
-    description: "Everyday beauty essentials."
-  },
-  {
-    id: 17,
-    name: "Premium Beauty Collection 07",
-    category: "Cosmetics",
-    price: 1099,
-    image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=80",
-    description: "Premium cosmetic collection."
-  },
-  {
-    id: 18,
-    name: "Premium Beauty Collection 08",
-    category: "Cosmetics",
-    price: 899,
-    image: "https://images.unsplash.com/photo-1599733594230-6b823276abcc?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant beauty products."
-  },
-  {
-    id: 19,
-    name: "Premium Beauty Collection 09",
-    category: "Cosmetics",
-    price: 1499,
-    image: "https://images.unsplash.com/photo-1619451334792-150fd785ee74?auto=format&fit=crop&w=900&q=80",
-    description: "Premium cosmetics for your beauty collection."
-  },
-  {
-    id: 20,
-    name: "Premium Beauty Collection 10",
-    category: "Cosmetics",
-    price: 799,
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
-    description: "Quality cosmetics collection."
-  },
 
-  // BANGLES
-  {
-    id: 21,
-    name: "Elegant Bangles Set 01",
-    category: "Bangles",
-    price: 799,
-    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant imitation bangles."
-  },
-  {
-    id: 22,
-    name: "Elegant Bangles Set 02",
-    category: "Bangles",
-    price: 599,
-    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful bangles collection."
-  },
-  {
-    id: 23,
-    name: "Elegant Bangles Set 03",
-    category: "Bangles",
-    price: 899,
-    image: "https://images.unsplash.com/photo-1598560917807-1bae44bd2be8?auto=format&fit=crop&w=900&q=80",
-    description: "Premium bangles for special occasions."
-  },
-  {
-    id: 24,
-    name: "Elegant Bangles Set 04",
-    category: "Bangles",
-    price: 699,
-    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish bangles collection."
-  },
-  {
-    id: 25,
-    name: "Elegant Bangles Set 05",
-    category: "Bangles",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1599459183200-59c7687a027b?auto=format&fit=crop&w=900&q=80",
-    description: "Premium traditional bangles."
-  },
-  {
-    id: 26,
-    name: "Elegant Bangles Set 06",
-    category: "Bangles",
-    price: 749,
-    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant bangle set."
-  },
-  {
-    id: 27,
-    name: "Elegant Bangles Set 07",
-    category: "Bangles",
-    price: 849,
-    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful imitation bangles."
-  },
-  {
-    id: 28,
-    name: "Elegant Bangles Set 08",
-    category: "Bangles",
-    price: 649,
-    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish bangles for everyday use."
-  },
-  {
-    id: 29,
-    name: "Elegant Bangles Set 09",
-    category: "Bangles",
-    price: 949,
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
-    description: "Premium bangle collection."
-  },
-  {
-    id: 30,
-    name: "Elegant Bangles Set 10",
-    category: "Bangles",
-    price: 1099,
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury bangle collection."
-  },
+async function loadProductsFromSupabase() {
 
-  // PERFUMES
-  {
-    id: 31,
-    name: "Luxury Perfume 01",
-    category: "Perfumes",
-    price: 1299,
-    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fragrance collection."
-  },
-  {
-    id: 32,
-    name: "Luxury Perfume 02",
-    category: "Perfumes",
-    price: 1499,
-    image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant long-lasting fragrance."
-  },
-  {
-    id: 33,
-    name: "Luxury Perfume 03",
-    category: "Perfumes",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=900&q=80",
-    description: "Premium perfume for everyday elegance."
-  },
-  {
-    id: 34,
-    name: "Luxury Perfume 04",
-    category: "Perfumes",
-    price: 1199,
-    image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful premium fragrance."
-  },
-  {
-    id: 35,
-    name: "Luxury Perfume 05",
-    category: "Perfumes",
-    price: 1599,
-    image: "https://images.unsplash.com/photo-1563170351-be82bc888aa4?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury fragrance collection."
-  },
-  {
-    id: 36,
-    name: "Luxury Perfume 06",
-    category: "Perfumes",
-    price: 899,
-    image: "https://images.unsplash.com/photo-1587017539504-67cfbddac569?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fragrance at an attractive price."
-  },
-  {
-    id: 37,
-    name: "Luxury Perfume 07",
-    category: "Perfumes",
-    price: 1099,
-    image: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant perfume collection."
-  },
-  {
-    id: 38,
-    name: "Luxury Perfume 08",
-    category: "Perfumes",
-    price: 1399,
-    image: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=900&q=80",
-    description: "Premium luxury fragrance."
-  },
-  {
-    id: 39,
-    name: "Luxury Perfume 09",
-    category: "Perfumes",
-    price: 1299,
-    image: "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=900&q=80",
-    description: "Long-lasting premium perfume."
-  },
-  {
-    id: 40,
-    name: "Luxury Perfume 10",
-    category: "Perfumes",
-    price: 1699,
-    image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury perfume for special occasions."
-  },
+  const grid =
+    document.getElementById("product-grid");
 
-  // HAND BAGS
-  {
-    id: 41,
-    name: "Premium Hand Bag 01",
-    category: "Hand Bags",
-    price: 1799,
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80",
-    description: "Premium stylish handbag."
-  },
-  {
-    id: 42,
-    name: "Premium Hand Bag 02",
-    category: "Hand Bags",
-    price: 1999,
-    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant handbag collection."
-  },
-  {
-    id: 43,
-    name: "Premium Hand Bag 03",
-    category: "Hand Bags",
-    price: 1599,
-    image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fashion handbag."
-  },
-  {
-    id: 44,
-    name: "Premium Hand Bag 04",
-    category: "Hand Bags",
-    price: 2299,
-    image: "https://images.unsplash.com/photo-1585488437808-9b0e3b4b3b7a?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury handbag for every occasion."
-  },
-  {
-    id: 45,
-    name: "Premium Hand Bag 05",
-    category: "Hand Bags",
-    price: 1899,
-    image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish premium handbag."
-  },
-  {
-    id: 46,
-    name: "Premium Hand Bag 06",
-    category: "Hand Bags",
-    price: 1499,
-    image: "https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant everyday handbag."
-  },
-  {
-    id: 47,
-    name: "Premium Hand Bag 07",
-    category: "Hand Bags",
-    price: 2499,
-    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury premium handbag."
-  },
-  {
-    id: 48,
-    name: "Premium Hand Bag 08",
-    category: "Hand Bags",
-    price: 1699,
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful handbag collection."
-  },
-  {
-    id: 49,
-    name: "Premium Hand Bag 09",
-    category: "Hand Bags",
-    price: 2199,
-    image: "https://images.unsplash.com/photo-1564222259826-4a8d6c1a1b0b?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fashion handbag."
-  },
-  {
-    id: 50,
-    name: "Premium Hand Bag 10",
-    category: "Hand Bags",
-    price: 1999,
-    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury handbag collection."
-  },
-
-  // ACCESSORIES
-  {
-    id: 51,
-    name: "Luxury Accessories 01",
-    category: "Accessories",
-    price: 699,
-    image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fashion accessories."
-  },
-  {
-    id: 52,
-    name: "Luxury Accessories 02",
-    category: "Accessories",
-    price: 799,
-    image: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant accessories collection."
-  },
-  {
-    id: 53,
-    name: "Luxury Accessories 03",
-    category: "Accessories",
-    price: 599,
-    image: "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish everyday accessories."
-  },
-  {
-    id: 54,
-    name: "Luxury Accessories 04",
-    category: "Accessories",
-    price: 899,
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
-    description: "Premium fashion accessories."
-  },
-  {
-    id: 55,
-    name: "Luxury Accessories 05",
-    category: "Accessories",
-    price: 749,
-    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=900&q=80",
-    description: "Beautiful accessory collection."
-  },
-  {
-    id: 56,
-    name: "Luxury Accessories 06",
-    category: "Accessories",
-    price: 999,
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=80",
-    description: "Premium accessories for your style."
-  },
-  {
-    id: 57,
-    name: "Luxury Accessories 07",
-    category: "Accessories",
-    price: 649,
-    image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=900&q=80",
-    description: "Elegant fashion accessories."
-  },
-  {
-    id: 58,
-    name: "Luxury Accessories 08",
-    category: "Accessories",
-    price: 849,
-    image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=900&q=80",
-    description: "Premium accessories collection."
-  },
-  {
-    id: 59,
-    name: "Luxury Accessories 09",
-    category: "Accessories",
-    price: 699,
-    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
-    description: "Stylish accessories for everyday use."
-  },
-  {
-    id: 60,
-    name: "Luxury Accessories 10",
-    category: "Accessories",
-    price: 1099,
-    image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=900&q=80",
-    description: "Luxury accessories by HURAIN."
+  if (grid && !productsLoaded) {
+    grid.innerHTML = `
+      <div class="empty-products">
+        <div>✨</div>
+        <h3>Loading products...</h3>
+      </div>
+    `;
   }
 
-];
+  const { data, error } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq("is_active", true)
+      .order("id", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load products:", error);
+
+    if (grid) {
+      grid.innerHTML = `
+        <div class="empty-products">
+          <div>⚠️</div>
+          <h3>Could not load products</h3>
+          <p>Please refresh the page.</p>
+        </div>
+      `;
+    }
+
+    return;
+  }
+
+  products = (data || []).map(function(row) {
+    return {
+      id: row.id,
+      name: row.name,
+      category: row.category,
+      price: Number(row.price),
+      salePrice:
+        row.sale_price !== null && row.sale_price !== undefined
+          ? Number(row.sale_price)
+          : null,
+      image: row.image_url || "",
+      description: row.description || "",
+      stock: Number(row.stock || 0)
+    };
+  });
+
+  productsLoaded = true;
+
+  loadProducts();
+  updateCart();
+}
+
+
+function effectivePrice(product) {
+  return (product.salePrice !== null && product.salePrice > 0 && product.salePrice < product.price)
+    ? product.salePrice
+    : product.price;
+}
 
 
 // ======================================================
@@ -695,8 +270,20 @@ function loadProducts() {
         </h3>
 
         <div class="product-price">
-          ₹${money(product.price)}
+          ${
+            product.salePrice !== null && product.salePrice > 0 && product.salePrice < product.price
+            ? `<span style="text-decoration:line-through;color:#999;font-size:13px;margin-right:6px;">₹${money(product.price)}</span>₹${money(effectivePrice(product))}`
+            : `₹${money(product.price)}`
+          }
         </div>
+
+        ${
+          product.stock <= 0
+          ? `<div style="color:#c62828;font-size:12px;font-weight:600;">Out of Stock</div>`
+          : (product.stock <= 3
+            ? `<div style="color:#e6a700;font-size:12px;font-weight:600;">Only ${product.stock} left</div>`
+            : "")
+        }
 
       </div>
 
@@ -704,6 +291,18 @@ function loadProducts() {
       <div class="product-cart-control">
 
         ${
+          product.stock <= 0
+
+          ?
+
+          `
+          <button type="button" class="add-cart" disabled style="opacity:.5;cursor:not-allowed;">
+            OUT OF STOCK
+          </button>
+          `
+
+          :
+
           quantity === 0
 
           ?
@@ -737,6 +336,7 @@ function loadProducts() {
               type="button"
               class="increase-button"
               data-product-id="${product.id}"
+              ${quantity >= product.stock ? "disabled style=\"opacity:.5;cursor:not-allowed;\"" : ""}
             >
               +
             </button>
@@ -952,7 +552,15 @@ function openProductDetails(productId) {
         </h2>
 
         <div class="product-price">
-          ₹${money(product.price)}
+          ${
+            product.salePrice !== null && product.salePrice > 0 && product.salePrice < product.price
+            ? `<span style="text-decoration:line-through;color:#999;font-size:14px;margin-right:6px;">₹${money(product.price)}</span>₹${money(effectivePrice(product))}`
+            : `₹${money(product.price)}`
+          }
+        </div>
+
+        <div style="font-weight:600;margin:4px 0;color:${product.stock <= 0 ? '#c62828' : (product.stock <= 3 ? '#e6a700' : '#2e7d32')};">
+          ${product.stock <= 0 ? "Out of Stock" : "In Stock: " + product.stock}
         </div>
 
         <p>
@@ -1007,14 +615,16 @@ function openProductDetails(productId) {
             type="button"
             class="add-cart"
             id="detail-add-cart"
+            ${product.stock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
           >
-            ADD TO CART
+            ${product.stock <= 0 ? "OUT OF STOCK" : "ADD TO CART"}
           </button>
 
           <button
             type="button"
             class="btn primary"
             id="detail-order-now"
+            ${product.stock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
           >
             ORDER NOW
           </button>
@@ -1131,6 +741,11 @@ function addToCart(productId) {
 
   if (!product) return;
 
+  if (product.stock <= 0) {
+    alert("This product is out of stock.");
+    return;
+  }
+
 
   const existing =
     cart.find(function(item) {
@@ -1140,6 +755,11 @@ function addToCart(productId) {
 
   if (existing) {
 
+    if (existing.quantity >= product.stock) {
+      alert("Only " + product.stock + " available.");
+      return;
+    }
+
     existing.quantity += 1;
 
   } else {
@@ -1148,7 +768,7 @@ function addToCart(productId) {
       id: product.id,
       name: product.name,
       category: product.category,
-      price: product.price,
+      price: effectivePrice(product),
       image: product.image,
       quantity: 1
     });
@@ -1168,6 +788,9 @@ function addToCart(productId) {
 
 function increaseQuantity(productId) {
 
+  const product =
+    getProduct(productId);
+
   const item =
     cart.find(function(item) {
       return Number(item.id) === Number(productId);
@@ -1176,6 +799,11 @@ function increaseQuantity(productId) {
 
   if (!item) {
     addToCart(productId);
+    return;
+  }
+
+  if (product && item.quantity >= product.stock) {
+    alert("Only " + product.stock + " available.");
     return;
   }
 
@@ -1765,7 +1393,68 @@ function submitCheckout(event) {
 // WHATSAPP ORDER
 // ======================================================
 
-function createWhatsAppOrder(customer) {
+async function createWhatsAppOrder(customer) {
+
+  const submitButton =
+    document.querySelector("#checkout-form button[type=submit]");
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.dataset.originalText = submitButton.textContent;
+    submitButton.textContent = "Placing order...";
+  }
+
+
+  // Re-check stock and deduct it atomically for the whole cart,
+  // right before the order is confirmed. This prevents overselling
+  // even if two customers check out at almost the same time.
+  const itemsForStockCheck =
+    cart.map(function(item) {
+      return { id: item.id, quantity: item.quantity };
+    });
+
+  const { error: stockError } =
+    await supabaseClient.rpc(
+      "place_order_deduct_stock",
+      { items: itemsForStockCheck }
+    );
+
+  if (stockError) {
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = submitButton.dataset.originalText || "Place Order";
+    }
+
+    const message = stockError.message || "";
+
+    if (message.includes("INSUFFICIENT_STOCK")) {
+
+      const parts = message.split(":");
+      const productName = parts[2] || "an item";
+      const available = parts[3] || "0";
+
+      alert(
+        "Sorry, only " + available + " of \"" + productName +
+        "\" is available now. Please update the quantity in your cart."
+      );
+
+    } else {
+
+      alert("Could not place order right now. Please try again.");
+    }
+
+    // Refresh products so the customer sees up-to-date stock
+    await loadProductsFromSupabase();
+
+    return;
+  }
+
+  if (submitButton) {
+    submitButton.disabled = false;
+    submitButton.textContent = submitButton.dataset.originalText || "Place Order";
+  }
+
 
   const subtotal =
     getCartSubtotal();
@@ -1982,7 +1671,6 @@ function createWhatsAppOrder(customer) {
 
 
   updateCart();
-  loadProducts();
 
 
   closeCheckout();
@@ -1996,6 +1684,11 @@ function createWhatsAppOrder(customer) {
     );
 
   }, 500);
+
+
+  // Refresh stock numbers from the database now that this order
+  // has deducted them, so the customer site shows accurate stock.
+  loadProductsFromSupabase();
 
 }
 
@@ -2579,7 +2272,7 @@ document.addEventListener(
     }
 
 
-    loadProducts();
+    loadProductsFromSupabase();
 
     updateCart();
 
