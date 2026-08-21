@@ -492,6 +492,78 @@ select {
         </div>
 
 
+        <!-- HOMEPAGE BANNER IMAGE -->
+        <section class="panel" id="homepageBannerPanel">
+
+            <h2>Homepage Banner Image</h2>
+            <p style="color:#777;font-size:13px;margin-top:-8px;">
+                This is the big photo on your website's front page (top banner).
+            </p>
+
+            <div style="margin-top:15px;">
+                <img id="heroImagePreview" src="" alt="Current homepage banner"
+                     style="width:100%;max-width:400px;border-radius:12px;display:none;object-fit:cover;max-height:220px;">
+            </div>
+
+            <div style="margin-top:15px;">
+                <input type="file" id="heroImageInput" accept="image/*" onchange="handleHeroImageSelect(event)">
+            </div>
+
+            <button class="btn btn-save" id="heroImageSaveButton" style="margin-top:15px;" onclick="saveHeroImage()">
+                Update Homepage Image
+            </button>
+
+            <div class="message success" id="heroImageSuccess" style="display:none;margin-top:12px;"></div>
+            <div class="message error" id="heroImageError" style="display:none;margin-top:12px;"></div>
+
+        </section>
+
+
+        <!-- ORDER HISTORY -->
+        <section class="panel" id="orderHistoryPanel">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <h2 style="margin:0;">Order History</h2>
+
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-clear" onclick="printOrderHistory()">
+                        Print
+                    </button>
+                    <button class="btn btn-clear" onclick="renderOrders()">
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats" style="margin-top:15px;">
+
+                <div class="stat">
+                    <span>Total Orders</span>
+                    <strong id="totalOrdersCount">0</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Pending</span>
+                    <strong id="pendingOrdersCount">0</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Delivered</span>
+                    <strong id="deliveredOrdersCount">0</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Total Sales</span>
+                    <strong id="totalSalesAmount">₹0</strong>
+                </div>
+
+            </div>
+
+            <div id="ordersContainer" style="margin-top:20px;"></div>
+
+        </section>
+
+
         <!-- ADD PRODUCT -->
         <section class="panel">
 
@@ -714,6 +786,8 @@ async function login() {
     document.getElementById("adminApp").style.display = "block";
 
     await renderProducts();
+    await renderOrders();
+    await loadHeroImagePreview();
 }
 
 
@@ -1196,6 +1270,120 @@ async function renderProducts() {
    SECURITY
 ========================= */
 
+/* =========================
+   HOMEPAGE BANNER IMAGE
+========================= */
+
+let selectedHeroImageFile = null;
+
+
+async function loadHeroImagePreview() {
+
+    const { data } =
+        await supabaseClient
+            .from("site_settings")
+            .select("value")
+            .eq("key", "hero_image_url")
+            .maybeSingle();
+
+    if (data && data.value) {
+
+        const preview = document.getElementById("heroImagePreview");
+        preview.src = data.value;
+        preview.style.display = "block";
+    }
+}
+
+
+function handleHeroImageSelect(event) {
+
+    const file = event.target.files[0];
+    if (!file) return;
+
+    selectedHeroImageFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const preview = document.getElementById("heroImagePreview");
+        preview.src = reader.result;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+async function saveHeroImage() {
+
+    const errorBox = document.getElementById("heroImageError");
+    const successBox = document.getElementById("heroImageSuccess");
+
+    errorBox.style.display = "none";
+    successBox.style.display = "none";
+
+    if (!selectedHeroImageFile) {
+        errorBox.textContent = "Please select a photo first.";
+        errorBox.style.display = "block";
+        return;
+    }
+
+    const saveButton = document.getElementById("heroImageSaveButton");
+    saveButton.disabled = true;
+    saveButton.textContent = "UPLOADING...";
+
+    try {
+
+        const fileExt = selectedHeroImageFile.name.split(".").pop();
+        const fileName = "site/hero_" + Date.now() + "." + fileExt;
+
+        const { error: uploadError } =
+            await supabaseClient
+                .storage
+                .from(BUCKET_NAME)
+                .upload(fileName, selectedHeroImageFile, {
+                    cacheControl: "3600",
+                    upsert: false
+                });
+
+        if (uploadError) throw new Error(uploadError.message);
+
+        const { data } =
+            supabaseClient
+                .storage
+                .from(BUCKET_NAME)
+                .getPublicUrl(fileName);
+
+        const { error: dbError } =
+            await supabaseClient
+                .from("site_settings")
+                .upsert({
+                    key: "hero_image_url",
+                    value: data.publicUrl,
+                    updated_at: new Date().toISOString()
+                });
+
+        if (dbError) throw new Error(dbError.message);
+
+        successBox.textContent = "Homepage image updated! It will show on your website now.";
+        successBox.style.display = "block";
+
+        selectedHeroImageFile = null;
+        document.getElementById("heroImageInput").value = "";
+
+    } catch (err) {
+
+        errorBox.textContent = "Could not update image: " + err.message;
+        errorBox.style.display = "block";
+
+    } finally {
+
+        saveButton.disabled = false;
+        saveButton.textContent = "Update Homepage Image";
+    }
+}
+
+
 function escapeHtml(value) {
 
     return String(value ?? "")
@@ -1204,6 +1392,365 @@ function escapeHtml(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   ORDER HISTORY
+========================= */
+
+let allOrders = [];
+
+
+const ORDER_STATUSES = ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"];
+
+const ORDER_STATUS_COLORS = {
+    "Pending": "#b8860b",
+    "Confirmed": "#1e6fd9",
+    "Shipped": "#7a3fc2",
+    "Delivered": "#1a9c56",
+    "Cancelled": "#c0392b"
+};
+
+
+async function getOrders() {
+
+    const { data, error } =
+        await supabaseClient
+            .from("orders")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        showError("Could not load orders: " + error.message);
+        return [];
+    }
+
+    return data || [];
+}
+
+
+function formatOrderDate(isoString) {
+
+    const date = new Date(isoString);
+
+    return date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+
+function updateOrderSummary() {
+
+    document.getElementById("totalOrdersCount").textContent =
+        allOrders.length;
+
+    document.getElementById("pendingOrdersCount").textContent =
+        allOrders.filter(function(o) { return o.status === "Pending"; }).length;
+
+    document.getElementById("deliveredOrdersCount").textContent =
+        allOrders.filter(function(o) { return o.status === "Delivered"; }).length;
+
+    const totalSales =
+        allOrders
+            .filter(function(o) { return o.status !== "Cancelled"; })
+            .reduce(function(sum, o) { return sum + Number(o.total || 0); }, 0);
+
+    document.getElementById("totalSalesAmount").textContent =
+        "₹" + totalSales.toLocaleString("en-IN");
+}
+
+
+async function updateOrderStatus(orderId, newStatus) {
+
+    const { error } =
+        await supabaseClient
+            .from("orders")
+            .update({ status: newStatus })
+            .eq("id", orderId);
+
+    if (error) {
+        alert("Could not update order status: " + error.message);
+        return;
+    }
+
+    const order = allOrders.find(function(o) { return o.id === orderId; });
+    if (order) order.status = newStatus;
+
+    updateOrderSummary();
+}
+
+
+async function renderOrders() {
+
+    const container =
+        document.getElementById("ordersContainer");
+
+    container.innerHTML = `<div class="empty">Loading orders...</div>`;
+
+    allOrders = await getOrders();
+
+    updateOrderSummary();
+
+    if (allOrders.length === 0) {
+
+        container.innerHTML = `<div class="empty">No orders yet.</div>`;
+        return;
+    }
+
+    container.innerHTML = allOrders.map(function(order) {
+
+        const itemsList = (order.items || []).map(function(item) {
+            return `
+                <tr>
+                    <td>${escapeHtml(item.name)}</td>
+                    <td>${escapeHtml(item.category || "")}</td>
+                    <td style="text-align:center;">${escapeHtml(item.quantity)}</td>
+                    <td style="text-align:right;">₹${Number(item.price).toLocaleString("en-IN")}</td>
+                    <td style="text-align:right;">₹${(Number(item.price) * Number(item.quantity)).toLocaleString("en-IN")}</td>
+                </tr>
+            `;
+        }).join("");
+
+        const statusColor =
+            ORDER_STATUS_COLORS[order.status] || "#777";
+
+        const statusOptions =
+            ORDER_STATUSES.map(function(s) {
+                return `<option value="${s}" ${s === order.status ? "selected" : ""}>${s}</option>`;
+            }).join("");
+
+        return `
+            <div class="order-card" data-order-id="${order.id}" style="border:1px solid #e5e5e5;border-radius:13px;padding:20px;margin-bottom:15px;">
+
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <strong>${escapeHtml(order.order_number)}</strong>
+                        <span style="background:${statusColor};color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;">
+                            ${escapeHtml(order.status)}
+                        </span>
+                    </div>
+                    <span style="color:#777;font-size:13px;">${formatOrderDate(order.created_at)}</span>
+                </div>
+
+                <div style="font-size:14px;margin-bottom:10px;">
+                    <div><strong>${escapeHtml(order.customer_name)}</strong> · ${escapeHtml(order.customer_mobile)}</div>
+                    <div style="color:#555;">
+                        ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")},
+                        ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
+                    </div>
+                    ${order.customer_note ? `<div style="color:#555;">Note: ${escapeHtml(order.customer_note)}</div>` : ""}
+                </div>
+
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #e5e5e5;">
+                            <th style="text-align:left;padding:4px 0;">Item</th>
+                            <th style="text-align:left;padding:4px 0;">Category</th>
+                            <th style="text-align:center;padding:4px 0;">Qty</th>
+                            <th style="text-align:right;padding:4px 0;">Price</th>
+                            <th style="text-align:right;padding:4px 0;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsList}
+                    </tbody>
+                </table>
+
+                <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-top:10px;">
+
+                    <div>
+                        <label style="font-size:12px;color:#777;display:block;margin-bottom:4px;">Order Status</label>
+                        <select onchange="updateOrderStatus(${order.id}, this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid #ddd;font-size:13px;">
+                            ${statusOptions}
+                        </select>
+                    </div>
+
+                    <div style="text-align:right;font-size:14px;">
+                        <div>Subtotal: ₹${Number(order.subtotal).toLocaleString("en-IN")}</div>
+                        <div>Delivery: ₹${Number(order.delivery).toLocaleString("en-IN")}</div>
+                        <div style="font-weight:700;">Grand Total: ₹${Number(order.total).toLocaleString("en-IN")}</div>
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+function printOrderHistory() {
+
+    const printWindow = window.open("", "_blank");
+
+    const printableOrders = allOrders.map(function(order) {
+
+        const itemsList = (order.items || []).map(function(item) {
+            return `
+                <tr>
+                    <td>${escapeHtml(item.name)}</td>
+                    <td style="text-align:center;">${escapeHtml(item.quantity)}</td>
+                    <td style="text-align:right;">₹${Number(item.price).toLocaleString("en-IN")}</td>
+                    <td style="text-align:right;">₹${(Number(item.price) * Number(item.quantity)).toLocaleString("en-IN")}</td>
+                </tr>
+            `;
+        }).join("");
+
+        return `
+            <div class="invoice">
+
+                <div class="invoice-header">
+                    <div>
+                        <div class="brand">HURAIN</div>
+                        <div class="brand-sub">Imitation Jewellery &amp; Cosmetics</div>
+                    </div>
+                    <div class="invoice-meta">
+                        <div><strong>Order:</strong> ${escapeHtml(order.order_number)}</div>
+                        <div><strong>Date:</strong> ${formatOrderDate(order.created_at)}</div>
+                        <div><strong>Status:</strong> ${escapeHtml(order.status)}</div>
+                    </div>
+                </div>
+
+                <div class="invoice-customer">
+                    <strong>${escapeHtml(order.customer_name)}</strong> · ${escapeHtml(order.customer_mobile)}<br>
+                    ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")},
+                    ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
+                    ${order.customer_note ? `<br>Note: ${escapeHtml(order.customer_note)}` : ""}
+                </div>
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">Item</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:right;">Price</th>
+                            <th style="text-align:right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsList}
+                    </tbody>
+                </table>
+
+                <div class="invoice-totals">
+                    <div>Subtotal: ₹${Number(order.subtotal).toLocaleString("en-IN")}</div>
+                    <div>Delivery: ₹${Number(order.delivery).toLocaleString("en-IN")}</div>
+                    <div class="grand-total">Grand Total: ₹${Number(order.total).toLocaleString("en-IN")}</div>
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>HURAIN — Order History</title>
+            <style>
+                * { box-sizing: border-box; }
+                body {
+                    font-family: Georgia, 'Times New Roman', serif;
+                    padding: 30px;
+                    color: #1a1a1a;
+                }
+                .print-title {
+                    text-align: center;
+                    margin-bottom: 25px;
+                }
+                .print-title h1 {
+                    margin: 0;
+                    letter-spacing: 2px;
+                }
+                .print-title p {
+                    margin: 4px 0 0;
+                    color: #777;
+                    font-size: 13px;
+                }
+                .invoice {
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin-bottom: 25px;
+                    page-break-inside: avoid;
+                }
+                .invoice-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    border-bottom: 2px solid #1a1a1a;
+                    padding-bottom: 12px;
+                    margin-bottom: 12px;
+                }
+                .brand {
+                    font-size: 20px;
+                    font-weight: 700;
+                    letter-spacing: 3px;
+                }
+                .brand-sub {
+                    font-size: 11px;
+                    color: #777;
+                }
+                .invoice-meta {
+                    text-align: right;
+                    font-size: 13px;
+                }
+                .invoice-customer {
+                    font-size: 13px;
+                    margin-bottom: 14px;
+                    color: #333;
+                }
+                .invoice-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 13px;
+                }
+                .invoice-table th {
+                    border-bottom: 1px solid #999;
+                    padding: 6px 4px;
+                }
+                .invoice-table td {
+                    padding: 6px 4px;
+                    border-bottom: 1px solid #eee;
+                }
+                .invoice-totals {
+                    text-align: right;
+                    margin-top: 12px;
+                    font-size: 13px;
+                }
+                .grand-total {
+                    font-weight: 700;
+                    font-size: 15px;
+                    margin-top: 4px;
+                }
+                @media print {
+                    body { padding: 10px; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="print-title">
+                <h1>HURAIN — Order History</h1>
+                <p>Printed on ${formatOrderDate(new Date().toISOString())} · ${allOrders.length} order(s)</p>
+            </div>
+            ${printableOrders}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(function() {
+        printWindow.print();
+    }, 300);
 }
 
 
@@ -1221,6 +1768,8 @@ function escapeHtml(value) {
         document.getElementById("adminApp").style.display = "block";
 
         await renderProducts();
+        await renderOrders();
+        await loadHeroImagePreview();
     }
 
 })();

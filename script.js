@@ -17,6 +17,37 @@ let products = [];
 let productsLoaded = false;
 
 
+async function loadHeroImage() {
+
+  try {
+
+    const { data, error } =
+      await supabaseClient
+        .from("site_settings")
+        .select("value")
+        .eq("key", "hero_image_url")
+        .maybeSingle();
+
+    if (error || !data || !data.value) return;
+
+    const heroSection =
+      document.querySelector(".hero-section");
+
+    if (heroSection) {
+
+      heroSection.style.backgroundImage =
+        "linear-gradient(90deg, rgba(0,0,0,0.92), rgba(0,0,0,0.58), rgba(0,0,0,0.20)), url('" +
+        data.value +
+        "')";
+    }
+
+  } catch (err) {
+
+    console.error("Failed to load homepage banner image:", err);
+  }
+}
+
+
 async function loadProductsFromSupabase() {
 
   const grid =
@@ -1513,6 +1544,42 @@ async function createWhatsAppOrder(customer) {
   );
 
 
+  // Save the order to Supabase too, so it shows up in the
+  // admin panel's Order History (this device-only localStorage
+  // list is kept only for the customer's own "My Orders" view).
+  try {
+
+    await supabaseClient
+      .from("orders")
+      .insert({
+        order_number: orderId,
+        customer_name: customer.name,
+        customer_mobile: customer.mobile,
+        customer_address: customer.address,
+        customer_area: customer.area,
+        customer_city: customer.city,
+        customer_state: customer.state,
+        customer_pincode: customer.pincode,
+        customer_note: customer.note || null,
+        items: cart.map(function(item) {
+          return {
+            name: item.name,
+            category: item.category,
+            quantity: item.quantity,
+            price: item.price
+          };
+        }),
+        subtotal: subtotal,
+        delivery: delivery,
+        total: total
+      });
+
+  } catch (err) {
+
+    console.error("Failed to save order history:", err);
+  }
+
+
   let message =
     "🛍️ *HURAIN NEW ORDER*\n\n";
 
@@ -2273,6 +2340,7 @@ document.addEventListener(
 
 
     loadProductsFromSupabase();
+    loadHeroImage();
 
     updateCart();
 
