@@ -1535,7 +1535,12 @@ async function renderOrders() {
                             ${escapeHtml(order.status)}
                         </span>
                     </div>
-                    <span style="color:#777;font-size:13px;">${formatOrderDate(order.created_at)}</span>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="color:#777;font-size:13px;">${formatOrderDate(order.created_at)}</span>
+                        <button class="btn btn-clear" style="padding:5px 12px;font-size:12px;" onclick="printSingleOrder(${order.id})">
+                            Print Label
+                        </button>
+                    </div>
                 </div>
 
                 <div style="font-size:14px;margin-bottom:10px;">
@@ -1586,74 +1591,113 @@ async function renderOrders() {
 }
 
 
-function printOrderHistory() {
+function buildShippingLabelHtml(order) {
+
+    const itemsList = (order.items || []).map(function(item) {
+        return `${escapeHtml(item.quantity)} x ${escapeHtml(item.name)}`;
+    }).join(", ");
+
+    return `
+        <div class="label">
+
+            <div class="label-brand">HURAIN</div>
+            <div class="label-brand-sub">IMITATION JEWELLERY &amp; COSMETICS</div>
+
+            <div class="label-section">
+                <div class="label-tiny">DELIVER TO</div>
+                <div class="label-name">${escapeHtml(order.customer_name)}</div>
+                <div class="label-address">
+                    ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")}<br>
+                    ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
+                </div>
+                <div class="label-phone">📞 ${escapeHtml(order.customer_mobile)}</div>
+                ${order.customer_note ? `<div class="label-note">Note: ${escapeHtml(order.customer_note)}</div>` : ""}
+            </div>
+
+            <div class="label-divider"></div>
+
+            <div class="label-section">
+                <div class="label-tiny">ORDER ${escapeHtml(order.order_number)} · ${formatOrderDate(order.created_at)}</div>
+                <div class="label-items">${itemsList}</div>
+            </div>
+
+            <div class="label-cod">
+                AMOUNT TO COLLECT (COD): ₹${Number(order.total).toLocaleString("en-IN")}
+            </div>
+
+        </div>
+    `;
+}
+
+
+function buildInvoiceHtml(order) {
+
+    const itemsList = (order.items || []).map(function(item) {
+        return `
+            <tr>
+                <td>${escapeHtml(item.name)}</td>
+                <td style="text-align:center;">${escapeHtml(item.quantity)}</td>
+                <td style="text-align:right;">₹${Number(item.price).toLocaleString("en-IN")}</td>
+                <td style="text-align:right;">₹${(Number(item.price) * Number(item.quantity)).toLocaleString("en-IN")}</td>
+            </tr>
+        `;
+    }).join("");
+
+    return `
+        <div class="invoice">
+
+            <div class="invoice-header">
+                <div>
+                    <div class="brand">HURAIN</div>
+                    <div class="brand-sub">Imitation Jewellery &amp; Cosmetics</div>
+                </div>
+                <div class="invoice-meta">
+                    <div><strong>Order:</strong> ${escapeHtml(order.order_number)}</div>
+                    <div><strong>Date:</strong> ${formatOrderDate(order.created_at)}</div>
+                    <div><strong>Status:</strong> ${escapeHtml(order.status)}</div>
+                </div>
+            </div>
+
+            <div class="invoice-customer">
+                <strong>${escapeHtml(order.customer_name)}</strong> · ${escapeHtml(order.customer_mobile)}<br>
+                ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")},
+                ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
+                ${order.customer_note ? `<br>Note: ${escapeHtml(order.customer_note)}` : ""}
+            </div>
+
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Item</th>
+                        <th style="text-align:center;">Qty</th>
+                        <th style="text-align:right;">Price</th>
+                        <th style="text-align:right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${itemsList}
+                </tbody>
+            </table>
+
+            <div class="invoice-totals">
+                <div>Subtotal: ₹${Number(order.subtotal).toLocaleString("en-IN")}</div>
+                <div>Delivery: ₹${Number(order.delivery).toLocaleString("en-IN")}</div>
+                <div class="grand-total">Grand Total: ₹${Number(order.total).toLocaleString("en-IN")}</div>
+            </div>
+
+        </div>
+    `;
+}
+
+
+function openPrintWindow(titleText, subtitleText, invoicesHtml) {
 
     const printWindow = window.open("", "_blank");
-
-    const printableOrders = allOrders.map(function(order) {
-
-        const itemsList = (order.items || []).map(function(item) {
-            return `
-                <tr>
-                    <td>${escapeHtml(item.name)}</td>
-                    <td style="text-align:center;">${escapeHtml(item.quantity)}</td>
-                    <td style="text-align:right;">₹${Number(item.price).toLocaleString("en-IN")}</td>
-                    <td style="text-align:right;">₹${(Number(item.price) * Number(item.quantity)).toLocaleString("en-IN")}</td>
-                </tr>
-            `;
-        }).join("");
-
-        return `
-            <div class="invoice">
-
-                <div class="invoice-header">
-                    <div>
-                        <div class="brand">HURAIN</div>
-                        <div class="brand-sub">Imitation Jewellery &amp; Cosmetics</div>
-                    </div>
-                    <div class="invoice-meta">
-                        <div><strong>Order:</strong> ${escapeHtml(order.order_number)}</div>
-                        <div><strong>Date:</strong> ${formatOrderDate(order.created_at)}</div>
-                        <div><strong>Status:</strong> ${escapeHtml(order.status)}</div>
-                    </div>
-                </div>
-
-                <div class="invoice-customer">
-                    <strong>${escapeHtml(order.customer_name)}</strong> · ${escapeHtml(order.customer_mobile)}<br>
-                    ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")},
-                    ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
-                    ${order.customer_note ? `<br>Note: ${escapeHtml(order.customer_note)}` : ""}
-                </div>
-
-                <table class="invoice-table">
-                    <thead>
-                        <tr>
-                            <th style="text-align:left;">Item</th>
-                            <th style="text-align:center;">Qty</th>
-                            <th style="text-align:right;">Price</th>
-                            <th style="text-align:right;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${itemsList}
-                    </tbody>
-                </table>
-
-                <div class="invoice-totals">
-                    <div>Subtotal: ₹${Number(order.subtotal).toLocaleString("en-IN")}</div>
-                    <div>Delivery: ₹${Number(order.delivery).toLocaleString("en-IN")}</div>
-                    <div class="grand-total">Grand Total: ₹${Number(order.total).toLocaleString("en-IN")}</div>
-                </div>
-
-            </div>
-        `;
-
-    }).join("");
 
     printWindow.document.write(`
         <html>
         <head>
-            <title>HURAIN — Order History</title>
+            <title>HURAIN — ${escapeHtml(titleText)}</title>
             <style>
                 * { box-sizing: border-box; }
                 body {
@@ -1737,10 +1781,133 @@ function printOrderHistory() {
         </head>
         <body>
             <div class="print-title">
-                <h1>HURAIN — Order History</h1>
-                <p>Printed on ${formatOrderDate(new Date().toISOString())} · ${allOrders.length} order(s)</p>
+                <h1>HURAIN — ${escapeHtml(titleText)}</h1>
+                <p>${escapeHtml(subtitleText)}</p>
             </div>
-            ${printableOrders}
+            ${invoicesHtml}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(function() {
+        printWindow.print();
+    }, 300);
+}
+
+
+function printOrderHistory() {
+
+    const invoicesHtml =
+        allOrders.map(buildInvoiceHtml).join("");
+
+    openPrintWindow(
+        "Order History",
+        "Printed on " + formatOrderDate(new Date().toISOString()) + " · " + allOrders.length + " order(s)",
+        invoicesHtml
+    );
+}
+
+
+function printSingleOrder(orderId) {
+
+    const order = allOrders.find(function(o) { return o.id === orderId; });
+
+    if (!order) {
+        alert("Could not find this order.");
+        return;
+    }
+
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>HURAIN — Shipping Label</title>
+            <style>
+                * { box-sizing: border-box; }
+                body {
+                    font-family: Arial, Helvetica, sans-serif;
+                    padding: 16px;
+                    color: #000;
+                }
+                .label {
+                    border: 2px solid #000;
+                    border-radius: 8px;
+                    padding: 18px;
+                    max-width: 400px;
+                    margin: 0 auto;
+                }
+                .label-brand {
+                    font-size: 22px;
+                    font-weight: 800;
+                    letter-spacing: 3px;
+                    text-align: center;
+                }
+                .label-brand-sub {
+                    font-size: 11px;
+                    letter-spacing: 1px;
+                    color: #555;
+                    text-align: center;
+                    margin-bottom: 14px;
+                }
+                .label-section {
+                    margin-bottom: 12px;
+                }
+                .label-tiny {
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: #555;
+                    letter-spacing: 1px;
+                    margin-bottom: 4px;
+                }
+                .label-name {
+                    font-size: 22px;
+                    font-weight: 800;
+                    margin-bottom: 4px;
+                }
+                .label-address {
+                    font-size: 18px;
+                    line-height: 1.4;
+                    font-weight: 600;
+                }
+                .label-phone {
+                    font-size: 20px;
+                    font-weight: 800;
+                    margin-top: 6px;
+                }
+                .label-note {
+                    font-size: 14px;
+                    margin-top: 6px;
+                    font-style: italic;
+                }
+                .label-divider {
+                    border-top: 1px dashed #999;
+                    margin: 12px 0;
+                }
+                .label-items {
+                    font-size: 13px;
+                    color: #333;
+                }
+                .label-cod {
+                    background: #000;
+                    color: #fff;
+                    text-align: center;
+                    font-size: 17px;
+                    font-weight: 800;
+                    padding: 10px;
+                    border-radius: 6px;
+                    margin-top: 10px;
+                }
+                @media print {
+                    body { padding: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            ${buildShippingLabelHtml(order)}
         </body>
         </html>
     `);
