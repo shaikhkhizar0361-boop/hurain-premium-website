@@ -932,6 +932,15 @@ function updateCart() {
   }
 
 
+  const modalTotal =
+    document.getElementById("cart-modal-total");
+
+  if (modalTotal) {
+    modalTotal.textContent =
+      money(getCartSubtotal());
+  }
+
+
   if (!items) return;
 
 
@@ -961,15 +970,28 @@ function updateCart() {
 
     row.innerHTML = `
 
-      <div class="cart-item-info">
+      <div class="cart-item-info" style="display:flex;align-items:center;gap:12px;">
 
-        <strong>
-          ${escapeHtml(item.name)}
-        </strong>
+        <img
+          src="${escapeHtml(item.image || '')}"
+          alt="${escapeHtml(item.name)}"
+          style="width:50px;height:50px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#f0f0f0;"
+          onerror="this.style.display='none';"
+        >
 
-        <small>
-          ₹${money(item.price)}
-        </small>
+        <div>
+
+          <strong>
+            ${escapeHtml(item.name)}
+          </strong>
+
+          <br>
+
+          <small>
+            ₹${money(item.price)}
+          </small>
+
+        </div>
 
       </div>
 
@@ -1566,7 +1588,8 @@ async function createWhatsAppOrder(customer) {
             name: item.name,
             category: item.category,
             quantity: item.quantity,
-            price: item.price
+            price: item.price,
+            image: item.image || ""
           };
         }),
         subtotal: subtotal,
