@@ -559,6 +559,15 @@ select {
 
             </div>
 
+            <input
+                type="text"
+                id="orderSearchInput"
+                placeholder="Search by customer name, mobile number or order ID"
+                oninput="applyOrderFilters()"
+                style="width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:9px;font-size:14px;margin-top:5px;outline:none;box-sizing:border-box;">
+
+            <div id="orderFilterTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"></div>
+
             <div id="ordersContainer" style="margin-top:20px;"></div>
 
         </section>
@@ -1488,6 +1497,87 @@ async function updateOrderStatus(orderId, newStatus) {
 }
 
 
+let currentOrderStatusFilter = "All";
+
+
+function renderOrderFilterTabs() {
+
+    const tabsContainer =
+        document.getElementById("orderFilterTabs");
+
+    if (!tabsContainer) return;
+
+    const tabDefs = ["All"].concat(ORDER_STATUSES);
+
+    tabsContainer.innerHTML = tabDefs.map(function(tab) {
+
+        const count =
+            tab === "All"
+                ? allOrders.length
+                : allOrders.filter(function(o) { return o.status === tab; }).length;
+
+        const isActive =
+            tab === currentOrderStatusFilter;
+
+        return `
+            <button
+                type="button"
+                onclick="setOrderStatusFilter('${tab}')"
+                style="border:0;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;
+                       background:${isActive ? "#111" : "#eee"};color:${isActive ? "#fff" : "#222"};">
+                ${tab} (${count})
+            </button>
+        `;
+
+    }).join("");
+}
+
+
+function setOrderStatusFilter(status) {
+
+    currentOrderStatusFilter = status;
+
+    renderOrderFilterTabs();
+    applyOrderFilters();
+}
+
+
+function getFilteredOrders() {
+
+    const searchInput =
+        document.getElementById("orderSearchInput");
+
+    const searchTerm =
+        (searchInput ? searchInput.value : "").toLowerCase().trim();
+
+    let filtered = allOrders;
+
+    if (currentOrderStatusFilter !== "All") {
+        filtered = filtered.filter(function(o) {
+            return o.status === currentOrderStatusFilter;
+        });
+    }
+
+    if (searchTerm) {
+        filtered = filtered.filter(function(o) {
+            return (
+                (o.customer_name || "").toLowerCase().includes(searchTerm) ||
+                (o.customer_mobile || "").toLowerCase().includes(searchTerm) ||
+                (o.order_number || "").toLowerCase().includes(searchTerm)
+            );
+        });
+    }
+
+    return filtered;
+}
+
+
+function applyOrderFilters() {
+
+    renderOrderCards(getFilteredOrders());
+}
+
+
 async function renderOrders() {
 
     const container =
@@ -1498,6 +1588,15 @@ async function renderOrders() {
     allOrders = await getOrders();
 
     updateOrderSummary();
+    renderOrderFilterTabs();
+    applyOrderFilters();
+}
+
+
+function renderOrderCards(ordersToRender) {
+
+    const container =
+        document.getElementById("ordersContainer");
 
     if (allOrders.length === 0) {
 
@@ -1505,7 +1604,13 @@ async function renderOrders() {
         return;
     }
 
-    container.innerHTML = allOrders.map(function(order) {
+    if (ordersToRender.length === 0) {
+
+        container.innerHTML = `<div class="empty">No orders match this filter/search.</div>`;
+        return;
+    }
+
+    container.innerHTML = ordersToRender.map(function(order) {
 
         const itemsList = (order.items || []).map(function(item) {
             return `
@@ -1809,12 +1914,20 @@ function openPrintWindow(titleText, subtitleText, invoicesHtml) {
 
 function printOrderHistory() {
 
+    const ordersToPrint =
+        getFilteredOrders();
+
     const invoicesHtml =
-        allOrders.map(buildInvoiceHtml).join("");
+        ordersToPrint.map(buildInvoiceHtml).join("");
+
+    const filterLabel =
+        currentOrderStatusFilter === "All"
+            ? ""
+            : " · Filter: " + currentOrderStatusFilter;
 
     openPrintWindow(
         "Order History",
-        "Printed on " + formatOrderDate(new Date().toISOString()) + " · " + allOrders.length + " order(s)",
+        "Printed on " + formatOrderDate(new Date().toISOString()) + " · " + ordersToPrint.length + " order(s)" + filterLabel,
         invoicesHtml
     );
 }
