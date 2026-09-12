@@ -13,6 +13,30 @@ const DELIVERY_CHARGE = 100;
 // ======================================================
 
 let products = [];
+let productVariants = {};
+let selectedVariantByProduct = {};
+
+
+function getVariants(productId) {
+  return productVariants[Number(productId)] || [];
+}
+
+
+function getSelectedVariant(productId) {
+
+  const variants =
+    getVariants(productId);
+
+  if (!variants.length) return null;
+
+  const selectedId =
+    selectedVariantByProduct[Number(productId)];
+
+  return (
+    variants.find(function(v) { return v.id === selectedId; }) ||
+    variants[0]
+  );
+}
 
 let productsLoaded = false;
 
@@ -100,6 +124,41 @@ async function loadProductsFromSupabase() {
       stock: Number(row.stock || 0)
     };
   });
+
+
+  // Load color variants (if any) for all products in one query.
+  try {
+
+    const { data: variantRows } =
+      await supabaseClient
+        .from("product_variants")
+        .select("*")
+        .order("id", { ascending: true });
+
+    productVariants = {};
+
+    (variantRows || []).forEach(function(row) {
+
+      const pid = Number(row.product_id);
+
+      if (!productVariants[pid]) {
+        productVariants[pid] = [];
+      }
+
+      productVariants[pid].push({
+        id: row.id,
+        colorName: row.color_name,
+        image: row.image_url || "",
+        stock: Number(row.stock || 0)
+      });
+
+    });
+
+  } catch (variantErr) {
+
+    console.error("Failed to load product variants:", variantErr);
+    productVariants = {};
+  }
 
   productsLoaded = true;
 
@@ -322,6 +381,18 @@ function loadProducts() {
       <div class="product-cart-control">
 
         ${
+          getVariants(product.id).length > 0
+
+          ?
+
+          `
+          <button type="button" class="add-cart select-options-btn" data-product-id="${product.id}">
+            SELECT OPTIONS
+          </button>
+          `
+
+          :
+
           product.stock <= 0
 
           ?
@@ -422,6 +493,18 @@ function loadProducts() {
         event.stopPropagation();
 
         addToCart(product.id);
+
+      });
+
+
+    // Select options (products with color variants)
+    card.querySelector(".select-options-btn")
+      ?.addEventListener("click", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        openProductDetails(product.id);
 
       });
 
@@ -542,9 +625,29 @@ function openProductDetails(productId) {
   }
 
 
+  const variants =
+    getVariants(productId);
+
+  const activeVariant =
+    getSelectedVariant(productId);
+
+  if (activeVariant) {
+    selectedVariantByProduct[Number(productId)] = activeVariant.id;
+  }
+
+  const displayImage =
+    (activeVariant && activeVariant.image) || product.image;
+
+  const displayStock =
+    activeVariant ? activeVariant.stock : product.stock;
+
+
   const cartItem =
     cart.find(function(item) {
-      return Number(item.id) === Number(productId);
+      return (
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (activeVariant ? activeVariant.id : null)
+      );
     });
 
 
@@ -565,7 +668,7 @@ function openProductDetails(productId) {
       <div class="product-detail-image">
 
         <img
-          src="${escapeHtml(product.image)}"
+          src="${escapeHtml(displayImage)}"
           alt="${escapeHtml(product.name)}"
         >
 
@@ -590,8 +693,48 @@ function openProductDetails(productId) {
           }
         </div>
 
-        <div style="font-weight:600;margin:4px 0;color:${product.stock <= 0 ? '#c62828' : (product.stock <= 3 ? '#e6a700' : '#2e7d32')};">
-          ${product.stock <= 0 ? "Out of Stock" : "In Stock: " + product.stock}
+        ${
+          variants.length > 0
+          ? `
+          <div style="margin:10px 0;">
+
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px;">
+              Color: ${escapeHtml(activeVariant ? activeVariant.colorName : "")}
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+              ${variants.map(function(v) {
+
+                const isSelected =
+                  activeVariant && v.id === activeVariant.id;
+
+                return `
+                  <button
+                    type="button"
+                    class="variant-swatch-btn"
+                    data-variant-id="${v.id}"
+                    style="padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;
+                           border:1px solid ${isSelected ? "#000" : "#ccc"};
+                           background:${isSelected ? "#000" : "#fff"};
+                           color:${isSelected ? "#fff" : "#333"};
+                           ${v.stock <= 0 ? "opacity:.45;" : ""}"
+                  >
+                    ${escapeHtml(v.colorName)}${v.stock <= 0 ? " (Out of stock)" : ""}
+                  </button>
+                `;
+
+              }).join("")}
+
+            </div>
+
+          </div>
+          `
+          : ""
+        }
+
+        <div style="font-weight:600;margin:4px 0;color:${displayStock <= 0 ? '#c62828' : (displayStock <= 3 ? '#e6a700' : '#2e7d32')};">
+          ${displayStock <= 0 ? "Out of Stock" : "In Stock: " + displayStock}
         </div>
 
         <p>
@@ -646,16 +789,16 @@ function openProductDetails(productId) {
             type="button"
             class="add-cart"
             id="detail-add-cart"
-            ${product.stock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
+            ${displayStock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
           >
-            ${product.stock <= 0 ? "OUT OF STOCK" : "ADD TO CART"}
+            ${displayStock <= 0 ? "OUT OF STOCK" : "ADD TO CART"}
           </button>
 
           <button
             type="button"
             class="btn primary"
             id="detail-order-now"
-            ${product.stock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
+            ${displayStock <= 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ""}
           >
             ORDER NOW
           </button>
@@ -667,6 +810,21 @@ function openProductDetails(productId) {
     </div>
 
   `;
+
+
+  // Color swatch selection
+  content.querySelectorAll(".variant-swatch-btn").forEach(function(btn) {
+
+    btn.addEventListener("click", function() {
+
+      selectedVariantByProduct[Number(productId)] =
+        Number(btn.dataset.variantId);
+
+      openProductDetails(productId);
+
+    });
+
+  });
 
 
   // Wishlist
@@ -686,7 +844,7 @@ function openProductDetails(productId) {
     .getElementById("detail-increase")
     ?.addEventListener("click", function() {
 
-      increaseQuantity(product.id);
+      increaseQuantity(product.id, activeVariant ? activeVariant.id : null);
 
       openProductDetails(product.id);
 
@@ -698,7 +856,7 @@ function openProductDetails(productId) {
     .getElementById("detail-decrease")
     ?.addEventListener("click", function() {
 
-      decreaseQuantity(product.id);
+      decreaseQuantity(product.id, activeVariant ? activeVariant.id : null);
 
       openProductDetails(product.id);
 
@@ -710,7 +868,7 @@ function openProductDetails(productId) {
     .getElementById("detail-add-cart")
     ?.addEventListener("click", function() {
 
-      addToCart(product.id);
+      addToCart(product.id, activeVariant ? activeVariant.id : null);
 
       openProductDetails(product.id);
 
@@ -722,7 +880,7 @@ function openProductDetails(productId) {
     .getElementById("detail-order-now")
     ?.addEventListener("click", function() {
 
-      orderNow(product.id);
+      orderNow(product.id, activeVariant ? activeVariant.id : null);
 
     });
 
@@ -765,14 +923,32 @@ function closeProductDetails() {
 // CART
 // ======================================================
 
-function addToCart(productId) {
+function addToCart(productId, variantId) {
+
+  variantId = variantId || null;
 
   const product =
     getProduct(productId);
 
   if (!product) return;
 
-  if (product.stock <= 0) {
+  const variants =
+    getVariants(productId);
+
+  const activeVariant =
+    variantId
+      ? variants.find(function(v) { return v.id === variantId; })
+      : null;
+
+  if (variants.length > 0 && !activeVariant) {
+    alert("Please select a color first.");
+    return;
+  }
+
+  const stockLimit =
+    activeVariant ? activeVariant.stock : product.stock;
+
+  if (stockLimit <= 0) {
     alert("This product is out of stock.");
     return;
   }
@@ -780,14 +956,17 @@ function addToCart(productId) {
 
   const existing =
     cart.find(function(item) {
-      return Number(item.id) === Number(productId);
+      return (
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (variantId || null)
+      );
     });
 
 
   if (existing) {
 
-    if (existing.quantity >= product.stock) {
-      alert("Only " + product.stock + " available.");
+    if (existing.quantity >= stockLimit) {
+      alert("Only " + stockLimit + " available.");
       return;
     }
 
@@ -800,8 +979,10 @@ function addToCart(productId) {
       name: product.name,
       category: product.category,
       price: effectivePrice(product),
-      image: product.image,
-      quantity: 1
+      image: (activeVariant && activeVariant.image) || product.image,
+      quantity: 1,
+      variantId: variantId,
+      color: activeVariant ? activeVariant.colorName : null
     });
 
   }
@@ -817,24 +998,40 @@ function addToCart(productId) {
 }
 
 
-function increaseQuantity(productId) {
+function increaseQuantity(productId, variantId) {
+
+  variantId = variantId || null;
 
   const product =
     getProduct(productId);
 
+  const variants =
+    getVariants(productId);
+
+  const activeVariant =
+    variantId
+      ? variants.find(function(v) { return v.id === variantId; })
+      : null;
+
   const item =
     cart.find(function(item) {
-      return Number(item.id) === Number(productId);
+      return (
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (variantId || null)
+      );
     });
 
 
   if (!item) {
-    addToCart(productId);
+    addToCart(productId, variantId);
     return;
   }
 
-  if (product && item.quantity >= product.stock) {
-    alert("Only " + product.stock + " available.");
+  const stockLimit =
+    activeVariant ? activeVariant.stock : (product ? product.stock : Infinity);
+
+  if (item.quantity >= stockLimit) {
+    alert("Only " + stockLimit + " available.");
     return;
   }
 
@@ -852,11 +1049,16 @@ function increaseQuantity(productId) {
 }
 
 
-function decreaseQuantity(productId) {
+function decreaseQuantity(productId, variantId) {
+
+  variantId = variantId || null;
 
   const item =
     cart.find(function(item) {
-      return Number(item.id) === Number(productId);
+      return (
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (variantId || null)
+      );
     });
 
 
@@ -869,8 +1071,8 @@ function decreaseQuantity(productId) {
   if (item.quantity <= 0) {
 
     cart =
-      cart.filter(function(item) {
-        return Number(item.id) !== Number(productId);
+      cart.filter(function(cartItem) {
+        return cartItem !== item;
       });
 
   }
@@ -886,11 +1088,16 @@ function decreaseQuantity(productId) {
 }
 
 
-function removeFromCart(productId) {
+function removeFromCart(productId, variantId) {
+
+  variantId = variantId || null;
 
   cart =
     cart.filter(function(item) {
-      return Number(item.id) !== Number(productId);
+      return !(
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (variantId || null)
+      );
     });
 
 
@@ -985,6 +1192,8 @@ function updateCart() {
             ${escapeHtml(item.name)}
           </strong>
 
+          ${item.color ? `<br><small style="color:#666;">Color: ${escapeHtml(item.color)}</small>` : ""}
+
           <br>
 
           <small>
@@ -1031,19 +1240,19 @@ function updateCart() {
 
     row.querySelector(".cart-minus")
       ?.addEventListener("click", function() {
-        decreaseQuantity(item.id);
+        decreaseQuantity(item.id, item.variantId || null);
       });
 
 
     row.querySelector(".cart-plus")
       ?.addEventListener("click", function() {
-        increaseQuantity(item.id);
+        increaseQuantity(item.id, item.variantId || null);
       });
 
 
     row.querySelector(".cart-remove")
       ?.addEventListener("click", function() {
-        removeFromCart(item.id);
+        removeFromCart(item.id, item.variantId || null);
       });
 
 
@@ -1242,6 +1451,111 @@ function renderCheckout() {
 
 
 // ======================================================
+// PINCODE AUTO-FILL (City / State) — India Post API
+// ======================================================
+
+let pincodeLookupInProgress = false;
+
+
+async function lookupPincode() {
+
+  const pincodeInput =
+    document.getElementById("customer-pincode");
+
+  const cityInput =
+    document.getElementById("customer-city");
+
+  const stateSelect =
+    document.getElementById("customer-state");
+
+  const errorEl =
+    document.getElementById("customer-pincode-error");
+
+  if (!pincodeInput) return;
+
+  const pincode =
+    pincodeInput.value.replace(/\D/g, "");
+
+  if (errorEl) {
+    errorEl.textContent = "";
+    errorEl.style.color = "";
+  }
+
+  if (pincode.length !== 6) return;
+
+  pincodeLookupInProgress = true;
+
+  try {
+
+    const response =
+      await fetch(
+        "https://api.postalpincode.in/pincode/" + pincode
+      );
+
+    const data =
+      await response.json();
+
+    const result =
+      data && data[0];
+
+    if (
+      result &&
+      result.Status === "Success" &&
+      result.PostOffice &&
+      result.PostOffice.length > 0
+    ) {
+
+      const postOffice =
+        result.PostOffice[0];
+
+      if (cityInput) {
+        cityInput.value =
+          postOffice.District || postOffice.Name || "";
+      }
+
+      if (stateSelect) {
+
+        const stateName =
+          postOffice.State || "";
+
+        let matched = false;
+
+        for (const option of stateSelect.options) {
+          if (option.value === stateName) {
+            stateSelect.value = stateName;
+            matched = true;
+            break;
+          }
+        }
+
+        if (!matched) {
+          stateSelect.value = "Other";
+        }
+      }
+
+    } else {
+
+      if (errorEl) {
+        errorEl.style.color = "#c62828";
+        errorEl.textContent =
+          "This pincode doesn't seem to exist. Please check and re-enter.";
+      }
+
+      if (cityInput) cityInput.value = "";
+    }
+
+  } catch (e) {
+
+    // Network error — fail silently, let the user fill city/state manually.
+
+  } finally {
+
+    pincodeLookupInProgress = false;
+  }
+}
+
+
+// ======================================================
 // CHECKOUT VALIDATION
 // ======================================================
 
@@ -1250,6 +1564,7 @@ function clearCheckoutErrors() {
   const ids = [
     "customer-name-error",
     "customer-mobile-error",
+    "customer-email-error",
     "customer-address-error",
     "customer-area-error",
     "customer-city-error",
@@ -1315,6 +1630,11 @@ function submitCheckout(event) {
       ?.value.replace(/\D/g, "") || "";
 
 
+  const email =
+    document.getElementById("customer-email")
+      ?.value.trim() || "";
+
+
   const address =
     document.getElementById("customer-address")
       ?.value.trim() || "";
@@ -1364,6 +1684,20 @@ function submitCheckout(event) {
     setCheckoutError(
       "customer-mobile-error",
       "Please enter a valid 10-digit mobile number."
+    );
+
+    valid = false;
+  }
+
+
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailPattern.test(email)) {
+
+    setCheckoutError(
+      "customer-email-error",
+      "Please enter a valid email address."
     );
 
     valid = false;
@@ -1431,6 +1765,7 @@ function submitCheckout(event) {
   createWhatsAppOrder({
     name,
     mobile,
+    email,
     address,
     area,
     city,
@@ -1463,7 +1798,11 @@ async function createWhatsAppOrder(customer) {
   // even if two customers check out at almost the same time.
   const itemsForStockCheck =
     cart.map(function(item) {
-      return { id: item.id, quantity: item.quantity };
+      return {
+        id: item.id,
+        quantity: item.quantity,
+        variant_id: item.variantId || null
+      };
     });
 
   const { error: stockError } =
@@ -1577,6 +1916,7 @@ async function createWhatsAppOrder(customer) {
         order_number: orderId,
         customer_name: customer.name,
         customer_mobile: customer.mobile,
+        customer_email: customer.email,
         customer_address: customer.address,
         customer_area: customer.area,
         customer_city: customer.city,
@@ -1589,7 +1929,8 @@ async function createWhatsAppOrder(customer) {
             category: item.category,
             quantity: item.quantity,
             price: item.price,
-            image: item.image || ""
+            image: item.image || "",
+            color: item.color || null
           };
         }),
         subtotal: subtotal,
@@ -1626,6 +1967,12 @@ async function createWhatsAppOrder(customer) {
   message +=
     "Mobile: " +
     customer.mobile +
+    "\n";
+
+
+  message +=
+    "Email: " +
+    customer.email +
     "\n\n";
 
 
@@ -1811,7 +2158,9 @@ function generateOrderId() {
 // ORDER NOW
 // ======================================================
 
-function orderNow(productId) {
+function orderNow(productId, variantId) {
+
+  variantId = variantId || null;
 
   const product =
     getProduct(productId);
@@ -1820,9 +2169,21 @@ function orderNow(productId) {
   if (!product) return;
 
 
+  const variants =
+    getVariants(productId);
+
+  const activeVariant =
+    variantId
+      ? variants.find(function(v) { return v.id === variantId; })
+      : null;
+
+
   const existing =
     cart.find(function(item) {
-      return Number(item.id) === Number(productId);
+      return (
+        Number(item.id) === Number(productId) &&
+        (item.variantId || null) === (variantId || null)
+      );
     });
 
 
@@ -1836,11 +2197,15 @@ function orderNow(productId) {
 
       category: product.category,
 
-      price: product.price,
+      price: effectivePrice(product),
 
-      image: product.image,
+      image: (activeVariant && activeVariant.image) || product.image,
 
-      quantity: 1
+      quantity: 1,
+
+      variantId: variantId,
+
+      color: activeVariant ? activeVariant.colorName : null
 
     });
 
@@ -2131,37 +2496,208 @@ function closeAccount() {
 
 function mobileLogin() {
 
-  const input =
-    document.getElementById("login-mobile");
+  // Deprecated: replaced by email + OTP login below.
+  // Kept as a no-op in case any old reference calls it.
+}
 
+
+// ======================================================
+// EMAIL + OTP LOGIN
+// ======================================================
+
+async function sendLoginOtp() {
+
+  const input =
+    document.getElementById("login-email");
+
+  const messageEl =
+    document.getElementById("accountLoginMessage");
+
+  const button =
+    document.getElementById("sendOtpButton");
 
   if (!input) return;
 
+  const email =
+    input.value.trim();
 
-  const mobile =
-    input.value.replace(/\D/g, "");
+  const emailPattern =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  if (!emailPattern.test(email)) {
 
-  if (!/^[6-9]\d{9}$/.test(mobile)) {
-
-    alert(
-      "Please enter a valid 10-digit mobile number."
-    );
+    if (messageEl) {
+      messageEl.style.color = "#c62828";
+      messageEl.textContent = "Please enter a valid email address.";
+    }
 
     return;
   }
 
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Sending...";
+  }
 
-  localStorage.setItem(
-    "hurain_customer_mobile",
-    mobile
-  );
+  if (messageEl) {
+    messageEl.style.color = "#555";
+    messageEl.textContent = "";
+  }
+
+  const { error } =
+    await supabaseClient.auth.signInWithOtp({
+      email: email,
+      options: { shouldCreateUser: true }
+    });
+
+  if (button) {
+    button.disabled = false;
+    button.textContent = "SEND OTP";
+  }
+
+  if (error) {
+
+    if (messageEl) {
+      messageEl.style.color = "#c62828";
+      messageEl.textContent = "Could not send OTP: " + error.message;
+    }
+
+    return;
+  }
+
+  localStorage.setItem("hurain_login_email_pending", email);
+
+  document.getElementById("account-email-step").style.display = "none";
+  document.getElementById("account-otp-step").style.display = "block";
+
+  if (messageEl) {
+    messageEl.style.color = "#1a9c56";
+    messageEl.textContent = "OTP sent to " + email + ". Check your inbox (and spam folder).";
+  }
+}
 
 
-  alert(
-    "Mobile number saved successfully."
-  );
+async function verifyLoginOtp() {
 
+  const otpInput =
+    document.getElementById("login-otp");
+
+  const messageEl =
+    document.getElementById("accountLoginMessage");
+
+  const button =
+    document.getElementById("verifyOtpButton");
+
+  const email =
+    localStorage.getItem("hurain_login_email_pending");
+
+  if (!otpInput || !email) return;
+
+  const token =
+    otpInput.value.trim();
+
+  if (!/^\d{6}$/.test(token)) {
+
+    if (messageEl) {
+      messageEl.style.color = "#c62828";
+      messageEl.textContent = "Please enter the 6-digit OTP.";
+    }
+
+    return;
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Verifying...";
+  }
+
+  const { data, error } =
+    await supabaseClient.auth.verifyOtp({
+      email: email,
+      token: token,
+      type: "email"
+    });
+
+  if (button) {
+    button.disabled = false;
+    button.textContent = "VERIFY & LOGIN";
+  }
+
+  if (error) {
+
+    if (messageEl) {
+      messageEl.style.color = "#c62828";
+      messageEl.textContent = "Invalid or expired OTP. Please try again.";
+    }
+
+    return;
+  }
+
+  localStorage.removeItem("hurain_login_email_pending");
+
+  showLoggedInAccountView(email);
+}
+
+
+function resetLoginForm() {
+
+  document.getElementById("account-email-step").style.display = "block";
+  document.getElementById("account-otp-step").style.display = "none";
+
+  const messageEl =
+    document.getElementById("accountLoginMessage");
+
+  if (messageEl) messageEl.textContent = "";
+
+  const otpInput =
+    document.getElementById("login-otp");
+
+  if (otpInput) otpInput.value = "";
+}
+
+
+function showLoggedInAccountView(email) {
+
+  const loggedOutView =
+    document.getElementById("account-logged-out-view");
+
+  const loggedInView =
+    document.getElementById("account-logged-in-view");
+
+  const emailDisplay =
+    document.getElementById("loggedInEmailDisplay");
+
+  if (loggedOutView) loggedOutView.style.display = "none";
+  if (loggedInView) loggedInView.style.display = "block";
+  if (emailDisplay) emailDisplay.textContent = email;
+}
+
+
+async function logoutCustomer() {
+
+  await supabaseClient.auth.signOut();
+
+  const loggedOutView =
+    document.getElementById("account-logged-out-view");
+
+  const loggedInView =
+    document.getElementById("account-logged-in-view");
+
+  if (loggedOutView) loggedOutView.style.display = "block";
+  if (loggedInView) loggedInView.style.display = "none";
+
+  resetLoginForm();
+}
+
+
+async function checkCustomerLoginOnLoad() {
+
+  const { data } =
+    await supabaseClient.auth.getSession();
+
+  if (data && data.session && data.session.user && data.session.user.email) {
+    showLoggedInAccountView(data.session.user.email);
+  }
 }
 
 
@@ -2366,6 +2902,8 @@ document.addEventListener(
     loadHeroImage();
 
     updateCart();
+
+    checkCustomerLoginOnLoad();
 
   }
 );

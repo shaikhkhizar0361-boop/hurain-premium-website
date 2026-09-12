@@ -619,33 +619,95 @@
       </div>
 
 
-      <label for="login-mobile">
-        Mobile Number
-      </label>
+      <div id="account-logged-out-view">
+
+        <div id="account-email-step">
+
+          <label for="login-email">
+            Email Address
+          </label>
+
+          <input
+            id="login-email"
+            class="form-input"
+            type="email"
+            placeholder="Enter your email address"
+          >
+
+          <button
+            type="button"
+            class="btn primary full-width"
+            onclick="sendLoginOtp()"
+            id="sendOtpButton"
+          >
+            SEND OTP
+          </button>
+
+        </div>
 
 
-      <input
-        id="login-mobile"
-        class="form-input"
-        type="tel"
-        inputmode="numeric"
-        maxlength="10"
-        placeholder="Enter 10 digit mobile number"
-      >
+        <div id="account-otp-step" style="display:none;margin-top:15px;">
+
+          <label for="login-otp">
+            Enter 6-Digit OTP
+          </label>
+
+          <input
+            id="login-otp"
+            class="form-input"
+            type="tel"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Enter OTP sent to your email"
+          >
+
+          <button
+            type="button"
+            class="btn primary full-width"
+            onclick="verifyLoginOtp()"
+            id="verifyOtpButton"
+          >
+            VERIFY &amp; LOGIN
+          </button>
+
+          <button
+            type="button"
+            class="btn secondary full-width"
+            style="margin-top:8px;"
+            onclick="resetLoginForm()"
+          >
+            CHANGE EMAIL / RESEND
+          </button>
+
+        </div>
 
 
-      <button
-        type="button"
-        class="btn primary full-width"
-        onclick="mobileLogin()"
-      >
-        SAVE MOBILE NUMBER
-      </button>
+        <p id="accountLoginMessage" style="font-size:13px;margin-top:10px;color:#555;"></p>
+
+      </div>
+
+
+      <div id="account-logged-in-view" style="display:none;">
+
+        <p style="margin-bottom:15px;">
+          Logged in as <strong id="loggedInEmailDisplay"></strong>
+        </p>
+
+        <button
+          type="button"
+          class="btn secondary full-width"
+          onclick="logoutCustomer()"
+        >
+          LOGOUT
+        </button>
+
+      </div>
 
 
       <button
         type="button"
         class="btn secondary full-width"
+        style="margin-top:10px;"
         onclick="showOrders(); closeAccount()"
       >
         MY ORDERS
@@ -801,6 +863,28 @@
 
             <div class="form-group">
 
+              <label for="customer-email">
+                Email Address
+              </label>
+
+              <input
+                id="customer-email"
+                class="form-input"
+                type="email"
+                autocomplete="email"
+                placeholder="Enter your email address"
+              >
+
+              <small
+                id="customer-email-error"
+                class="form-error"
+              ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
               <label for="customer-address">
                 House / Flat Number
               </label>
@@ -878,6 +962,7 @@
                   inputmode="numeric"
                   maxlength="6"
                   placeholder="6 digit pincode"
+                  oninput="lookupPincode()"
                 >
 
                 <small
@@ -905,41 +990,42 @@
                   Select State
                 </option>
 
-                <option value="Maharashtra">
-                  Maharashtra
-                </option>
-
-                <option value="Gujarat">
-                  Gujarat
-                </option>
-
-                <option value="Madhya Pradesh">
-                  Madhya Pradesh
-                </option>
-
-                <option value="Rajasthan">
-                  Rajasthan
-                </option>
-
-                <option value="Karnataka">
-                  Karnataka
-                </option>
-
-                <option value="Telangana">
-                  Telangana
-                </option>
-
-                <option value="Goa">
-                  Goa
-                </option>
-
-                <option value="Delhi">
-                  Delhi
-                </option>
-
-                <option value="Uttar Pradesh">
-                  Uttar Pradesh
-                </option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Puducherry">Puducherry</option>
 
                 <option value="Other">
                   Other
@@ -952,6 +1038,27 @@
                 id="customer-state-error"
                 class="form-error"
               ></small>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="customer-country">
+                Country / Region
+              </label>
+
+              <select
+                id="customer-country"
+                class="form-input"
+                disabled
+              >
+
+                <option value="India" selected>
+                  India
+                </option>
+
+              </select>
 
             </div>
 

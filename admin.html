@@ -729,6 +729,45 @@ select {
         </section>
 
 
+        <!-- MANAGE COLOR VARIANTS (only while editing an existing product) -->
+        <section class="panel" id="variantsPanel" style="display:none;">
+
+            <h2>Manage Colors — <span id="variantsProductName"></span></h2>
+
+            <div class="message warning" id="variantErrorMessage" style="color:#c62828;"></div>
+
+            <div id="variantsList" style="margin-bottom:20px;"></div>
+
+            <div class="grid">
+
+                <div class="form-group">
+                    <label>Color Name</label>
+                    <input type="text" id="variantColorName" placeholder="Example: Black">
+                </div>
+
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    <input type="number" id="variantStock" placeholder="e.g. 5" min="0" value="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Color Image (optional — uses main product image if left blank)</label>
+                    <div class="image-upload-box">
+                        <input type="file" id="variantImageFile" accept="image/*">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-add" id="addVariantButton" onclick="addColorVariant()">
+                    ADD COLOR
+                </button>
+            </div>
+
+        </section>
+
+
         <!-- PRODUCTS -->
         <section class="panel">
 
@@ -1078,8 +1117,196 @@ async function saveProduct() {
 
 
 /* =========================
-   EDIT PRODUCT
+   COLOR VARIANTS
 ========================= */
+
+let currentVariantProductId = null;
+let currentVariants = [];
+
+
+async function loadVariantsForProduct(productId) {
+
+    currentVariantProductId = productId;
+
+    const { data, error } =
+        await supabaseClient
+            .from("product_variants")
+            .select("*")
+            .eq("product_id", productId)
+            .order("id", { ascending: true });
+
+    if (error) {
+        console.error("Failed to load variants:", error);
+        currentVariants = [];
+    } else {
+        currentVariants = data || [];
+    }
+
+    renderVariantsList();
+}
+
+
+function renderVariantsList() {
+
+    const container =
+        document.getElementById("variantsList");
+
+    if (!container) return;
+
+    if (currentVariants.length === 0) {
+        container.innerHTML = `<div class="empty">No colors added yet for this product.</div>`;
+        return;
+    }
+
+    container.innerHTML = currentVariants.map(function(v) {
+
+        return `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #eee;border-radius:9px;margin-bottom:8px;">
+
+                <img src="${v.image_url || ''}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;background:#f0f0f0;" onerror="this.style.display='none';">
+
+                <div style="flex:1;">
+                    <strong>${escapeHtml(v.color_name)}</strong>
+                </div>
+
+                <input
+                    type="number"
+                    min="0"
+                    value="${v.stock}"
+                    style="width:70px;padding:8px;border:1px solid #ddd;border-radius:7px;"
+                    onchange="updateVariantStock(${v.id}, this.value)"
+                >
+
+                <button
+                    type="button"
+                    class="btn btn-clear"
+                    style="padding:6px 12px;font-size:12px;"
+                    onclick="deleteVariant(${v.id})"
+                >
+                    Delete
+                </button>
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+
+
+
+
+async function addColorVariant() {
+
+    const colorName =
+        document.getElementById("variantColorName").value.trim();
+
+    const stock =
+        document.getElementById("variantStock").value;
+
+    const fileInput =
+        document.getElementById("variantImageFile");
+
+    const errorEl =
+        document.getElementById("variantErrorMessage");
+
+    const button =
+        document.getElementById("addVariantButton");
+
+    errorEl.style.display = "none";
+    errorEl.textContent = "";
+
+    if (!colorName) {
+        errorEl.style.display = "block";
+        errorEl.textContent = "Please enter a color name.";
+        return;
+    }
+
+    if (stock === "" || Number(stock) < 0) {
+        errorEl.style.display = "block";
+        errorEl.textContent = "Please enter a valid stock quantity.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "ADDING...";
+
+    try {
+
+        let imageUrl = null;
+
+        if (fileInput.files && fileInput.files[0]) {
+            imageUrl = await uploadProductImage(fileInput.files[0]);
+        }
+
+        const { error } =
+            await supabaseClient
+                .from("product_variants")
+                .insert({
+                    product_id: currentVariantProductId,
+                    color_name: colorName,
+                    image_url: imageUrl,
+                    stock: Number(stock)
+                });
+
+        if (error) throw new Error(error.message);
+
+        document.getElementById("variantColorName").value = "";
+        document.getElementById("variantStock").value = "0";
+        fileInput.value = "";
+
+        await loadVariantsForProduct(currentVariantProductId);
+
+    } catch (err) {
+
+        errorEl.style.display = "block";
+        errorEl.textContent = "Could not add color: " + err.message;
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "ADD COLOR";
+    }
+}
+
+
+async function updateVariantStock(variantId, newStock) {
+
+    const { error } =
+        await supabaseClient
+            .from("product_variants")
+            .update({ stock: Number(newStock) })
+            .eq("id", variantId);
+
+    if (error) {
+        alert("Could not update stock: " + error.message);
+    }
+}
+
+
+async function deleteVariant(variantId) {
+
+    const confirmDelete =
+        confirm("Delete this color option?");
+
+    if (!confirmDelete) return;
+
+    const { error } =
+        await supabaseClient
+            .from("product_variants")
+            .delete()
+            .eq("id", variantId);
+
+    if (error) {
+        alert("Could not delete: " + error.message);
+        return;
+    }
+
+    await loadVariantsForProduct(currentVariantProductId);
+}
+
+
+
 
 function editProduct(id) {
 
@@ -1115,6 +1342,10 @@ function editProduct(id) {
 
 
     document.getElementById("formTitle").textContent = "Edit Product";
+
+    document.getElementById("variantsPanel").style.display = "block";
+    document.getElementById("variantsProductName").textContent = product.name;
+    loadVariantsForProduct(product.id);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -1169,6 +1400,10 @@ function clearForm() {
 
     document.getElementById("formTitle").textContent = "Add New Product";
     document.getElementById("imagePreview").style.display = "none";
+
+    document.getElementById("variantsPanel").style.display = "none";
+    currentVariantProductId = null;
+    currentVariants = [];
 }
 
 
@@ -1563,6 +1798,7 @@ function getFilteredOrders() {
             return (
                 (o.customer_name || "").toLowerCase().includes(searchTerm) ||
                 (o.customer_mobile || "").toLowerCase().includes(searchTerm) ||
+                (o.customer_email || "").toLowerCase().includes(searchTerm) ||
                 (o.order_number || "").toLowerCase().includes(searchTerm)
             );
         });
@@ -1659,6 +1895,7 @@ function renderOrderCards(ordersToRender) {
 
                 <div style="font-size:14px;margin-bottom:10px;">
                     <div><strong>${escapeHtml(order.customer_name)}</strong> · ${escapeHtml(order.customer_mobile)}</div>
+                    ${order.customer_email ? `<div style="font-size:12px;color:#666;">✉️ ${escapeHtml(order.customer_email)}</div>` : ""}
                     <div style="color:#555;">
                         ${escapeHtml(order.customer_address || "")}, ${escapeHtml(order.customer_area || "")},
                         ${escapeHtml(order.customer_city || "")}, ${escapeHtml(order.customer_state || "")} - ${escapeHtml(order.customer_pincode || "")}
